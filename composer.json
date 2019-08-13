@@ -1,18 +1,19 @@
 {
-    "name" : "depa/middleware-formhandler",
-    "description" : "The middleware formularhandler is a PSR-15 middleware that provides handling from formulardata to a Zend Expressive application",
+    "name" : "depa/middleware-formularhandler",
+    "description" : "The middleware formularhandler is a PSR-15 middleware that provides handling from formular data in a Zend Expressive application",
     "keywords" : [
         "framework",
         "depa",
-        "Formular"
+        "formular"
     ],
     "license" : "MIT",
-    "homepage" : "https://github.com/depa-berlin/Middleware-FormHandler",
+    "homepage" : "https://github.com/depa-berlin/Middleware-FormularHandler",
     "require": {
         "psr/http-server-middleware": "^1.0",
         "psr/container": "^1.0",
         "zendframework/zend-servicemanager": "^3.4",
-        "swiftmailer/swiftmailer": "^6.2"
+        "swiftmailer/swiftmailer": "^6.2",
+        "true/punycode": "^2.1"
     },
 
     "authors":      [
@@ -29,13 +30,13 @@
     ],
     "autoload" : {
         "psr-4" : {
-            "depa\\FormHandlerMiddleware\\" : "src/"
+            "depa\\FormularHandlerMiddleware\\" : "src/"
         }
     },
     "extra": {
         "zf": {
-            "component": "depa\\FormHandlerMiddleware",
-            "config-provider": "depa\\NFormHandlerMiddleware\\ConfigProvider"
+            "component": "depa\\FormularHandlerMiddleware",
+            "config-provider": "depa\\FormularHandlerMiddleware\\ConfigProvider"
         }
     },
     "minimum-stability" : "dev",

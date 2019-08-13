@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace depa\FormHandlerMiddleware\Middleware;
+namespace depa\FormularHandlerMiddleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -10,7 +10,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\JsonResponse;
 
 
-class FormHandlerMiddleware implements RequestHandlerInterface
+class FormularHandlerMiddleware implements RequestHandlerInterface
 {
     /**
      * @var TemplateRendererInterface
