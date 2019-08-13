@@ -27,9 +27,8 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
 
     private $problem_details;
 
-    public function __construct(TemplateRendererInterface $renderer, $formDefinition, $problemDetails)
+    public function __construct($formDefinition, $problemDetails)
     {
-        $this->renderer = $renderer;
         $this->formDefinition = $formDefinition;
         $this->problemDetails = $problemDetails;
     }
@@ -67,6 +66,8 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
 
         // $formData['config']
         // damit bekommen wir nun die Config für das konkrete Formular
+
+
 
     }
 

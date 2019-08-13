@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace depa\FormularHandlerMiddleware;
 
 use Psr\Container\ContainerInterface;
-use Zend\Expressive\Template\TemplateRendererInterface;
+use Zend\ProblemDetails\ProblemDetailsResponseFactory;
 
 class FormularHandlerMiddlewareFactory
 {
@@ -24,7 +24,7 @@ class FormularHandlerMiddlewareFactory
         */
 
         $formConfig = $container->get('config')['depaForm'];
-        $problem_details = $container->get(\Zend\ProblemDetails\ProblemDetailsResponseFactory::class);
-        return new FormularHandlerMiddleware($container->get(TemplateRendererInterface::class), $formConfig, $problem_details);
+        $problemDetails = $container->get(ProblemDetailsResponseFactory::class);
+        return new FormularHandlerMiddleware( $formConfig, $problemDetails);
     }
 }
