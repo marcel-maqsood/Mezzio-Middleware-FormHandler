@@ -27,20 +27,24 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
 
     private $problem_details;
 
-    public function __construct(TemplateRendererInterface $renderer, $formDefinition, $problem_details)
+    public function __construct(TemplateRendererInterface $renderer, $formDefinition, $problemDetails)
     {
         $this->renderer = $renderer;
         $this->formDefinition = $formDefinition;
-        $this->problem_details = $problem_details;
+        $this->problemDetails = $problemDetails;
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $data = Json::decode($request->getBody()->getContents(), Json::TYPE_ARRAY);
+        $dataArray = Json::decode($request->getBody()->getContents(), Json::TYPE_ARRAY);
         //evtl. überprüfen?
-        if(is_null($data) || !is_array($data)){
-            //Api problem shoot
-            return $this->problem_details->createResponse(
+
+        if (is_null($dataArray) || !is_array($dataArray) || !array_key_exists($dataArray['data'])){
+            return $this->problemDetails->createResponse(
                 $this->request,
                 400,
                 "Data was missing in submitted form.",
@@ -49,9 +53,20 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
             );
         }
 
-        $data = $data['data'];
+        $formData = $dataArray['data'];
 
+        if (!array_key_exists($formData['config'])){
+            return $this->problemDetails->createResponse(
+                $this->request,
+                400,
+                "Die Bezeichnung der Config fehlt",
+                self::STATUS_MISSING_VALUE,
+                "N/A"
+            );
+        }
 
+        // $formData['config']
+        // damit bekommen wir nun die Config für das konkrete Formular
 
     }
 
