@@ -3,14 +3,25 @@
 return [
 
     'depaForm' => [
-        'email_transfer' => [
-            'method' => "smtp",
-            'config' => [
-                'service' => "smtp.googlemail.com",
-                'port' => "465",
-                'encryption' => "ssl",
-                'email' => "marcel.dp.designpark@gmail.com",
-                'password' => "marceldesignpark",
+        'adapter' => [
+            'testAdapter-1' => [
+                'mail' => [
+                    'recipients' => ['maqsood@designpark.de'],
+                    'subject' => 'Anmeldung als Arbeitnehmer über paulihealthpeople.de',
+                    'sender' => 'formular@paulihealthpeople.de',
+                    'senderName' => 'Kontaktformular',
+                    'template' => 'formular::bewerber',
+                    'email_transfer' => [
+                        'method' => "smtp",
+                        'config' => [
+                            'service' => "smtp.googlemail.com",
+                            'port' => "465",
+                            'encryption' => "ssl",
+                            'email' => "marcel.dp.designpark@gmail.com",
+                            'password' => "marceldesignpark",
+                        ],
+                    ],
+                ],
             ],
         ],
         'forms' => [
@@ -36,7 +47,7 @@ return [
                     ],
                     'phone' => [
                         'required' => true,
-                        'type' =>  'tel',
+                        'type' => 'tel',
                     ],
                     'mail' => [
                         'required' => true,
@@ -48,11 +59,25 @@ return [
                         'type' => 'textarea',
                     ],
                 ],
-                'recipients' => ['maqsood@designpark.de'],
-                'subject' => 'Anfrage über paulihealthpeople.de',
-                'sender' => 'formular@paulihealthpeople.de',
-                'senderName' => 'Kontaktformular',
-                'template' => 'formular::contact',
+                'adapter' => [
+                    'mail' => [
+                        'recipients' => ['maqsood@designpark.de'],
+                        'subject' => 'Anfrage über paulihealthpeople.de',
+                        'sender' => 'formular@paulihealthpeople.de',
+                        'senderName' => 'Kontaktformular',
+                        'template' => 'formular::contact',
+                        'email_transfer' => [
+                            'method' => "smtp",
+                            'config' => [
+                                'service' => "smtp.googlemail.com",
+                                'port' => "465",
+                                'encryption' => "ssl",
+                                'email' => "marcel.dp.designpark@gmail.com",
+                                'password' => "marceldesignpark",
+                            ],
+                        ],
+                    ],
+                ],
             ],
             'arbeitnehmer' => [
                 'fields' => [
@@ -65,7 +90,7 @@ return [
                         'type' => 'text',
                     ],
                     'qualification' => [
-                      'required' => true,
+                        'required' => true,
                         'type' => "text",
                     ],
                     'street' => [
@@ -82,7 +107,7 @@ return [
                     ],
                     'phone' => [
                         'required' => true,
-                        'type' =>  'tel',
+                        'type' => 'tel',
                     ],
                     'message' => [
                         'required' => true,
@@ -91,11 +116,25 @@ return [
                         'required' => true,
                     ],
                 ],
-                'recipients' => ['maqsood@designpark.de'],
-                'subjfct' => 'Anmeldung als Arbeitnehmer über paulihealthpeople.de',
-                'sender' => 'formular@paulihealthpeople.de',
-                'senderName' => 'Kontaktformular',
-                'template' => 'formular::bewerber',
+                'adapter' => [
+                    'mail' => [
+                        'recipients' => ['maqsood@designpark.de'],
+                        'subject' => 'Anmeldung als Arbeitnehmer über paulihealthpeople.de',
+                        'sender' => 'formular@paulihealthpeople.de',
+                        'senderName' => 'Kontaktformular',
+                        'template' => 'formular::bewerber',
+                        'email_transfer' => [
+                            'method' => "smtp",
+                            'config' => [
+                                'service' => "smtp.googlemail.com",
+                                'port' => "465",
+                                'encryption' => "ssl",
+                                'email' => "marcel.dp.designpark@gmail.com",
+                                'password' => "marceldesignpark",
+                            ],
+                        ],
+                    ],
+                ],
             ],
             'arbeitgeber' => [
                 'fields' => [
@@ -123,7 +162,7 @@ return [
                     ],
                     'zipcode_arbeitgeber' => [
                         'required' => true,
-                        'type' =>  'tel',
+                        'type' => 'tel',
                     ],
                     'city_arbeitgeber' => [
                         'required' => true,
@@ -145,11 +184,9 @@ return [
                         'type' => 'textarea',
                     ],
                 ],
-                'recipients' => ['maqsood@designpark.de'],
-                'subject' => 'Anmeldung als Arbeitgeber über paulihealthpeople.de',
-                'sender' => 'formular@paulihealthpeople.de',
-                'senderName' => 'Kontaktformular',
-                'template' => 'formular::arbeitgeber',
+                'adapter' => [
+                    'testAdapter-1'
+                ],
             ],
             // und so weiter...
         ],
