@@ -3,6 +3,7 @@
 
 namespace depa\FormularHandlerMiddleware\Adapter;
 
+use depa\FormularHandlerMiddleware\FormularFactory;
 use PDO;
 use Psr\Container\ContainerInterface;
 
@@ -16,8 +17,7 @@ class MailFactory
         $pdo = $container->get('config')['???']['mail'] ?? null;
 
         return new Mail(
-
-            $container->get(Formular::class)
+            $container->get(FormularFactory::class)
         );
     }
 }
