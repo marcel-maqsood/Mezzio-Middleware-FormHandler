@@ -15,9 +15,8 @@ class FormularFactory
     public function __invoke(ContainerInterface $container) : callable
     {
         $this->container = $container;
-        return function (array $config = [], array $requestData = []) : Formular {
-            $problemDetails = $this->container->get(ProblemDetailsResponseFactory::class);
-            return new Formular($config, $requestData, $problemDetails);
-        };
+
+            return new Formular();
+
     }
 }

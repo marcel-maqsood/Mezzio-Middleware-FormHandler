@@ -21,7 +21,7 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
     private $problemDetails;
     private $formularObj;
 
-    public function __construct($formDefinition, $formularObj, ProblemDetailsResponseFactory $problemDetails)
+    public function __construct($formDefinition, Formular $formularObj, ProblemDetailsResponseFactory $problemDetails)
     {
         $this->formDefinition = $formDefinition;
         $this->problemDetails = $problemDetails;
@@ -37,7 +37,7 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
         $dataArray = Json::decode($request->getBody()->getContents(), Json::TYPE_ARRAY);
         //evtl. überprüfen?
 
-        if (is_null($dataArray) || !is_array($dataArray) || !array_key_exists($dataArray['data'])){
+        if (is_null($dataArray) || !is_array($dataArray) || !array_key_exists('data', $dataArray)) {
             return $this->problemDetails->createResponse(
                 $request,
                 400,
@@ -49,27 +49,33 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
 
         $formData = $dataArray['data'];
 
-        if (!array_key_exists($formData['config'])){
+        if (!array_key_exists('config', $formData)) {
             return $this->problemDetails->createResponse(
                 $request,
                 400,
-                "Die Bezeichnung der Config fehlt",
+                "Der Verweis auf die Formular-Konfiguration fehlt. Das Formular benötigt ein entsprechendes Hidden-Feld mit dem Namen 'config'.",
                 self::STATUS_MISSING_VALUE,
                 "N/A"
             );
         }
 
-        //Setzt im Formular Objekt die zum Array umgewandelten Daten des Post.
-        $this->formularObj->setRequestData($dataArray);
+        $this->formularObj->setRequestData($formData);
+        $this->formularObj->validateRequestData();
+        if ($this->formularObj->getErrorStatus()) {
+            return $this->problemDetails->createResponse(
+                $request,
+                400,
+                $this->formularObj->getErrorDescription(),
+                self::STATUS_MISSING_VALUE,
+                "N/A"
+            );
+        }
 
         // $formData['config']
         // damit bekommen wir nun die Config für das konkrete Formular
 
         $formConfig = $this->formDefinition['forms'][$formData['config']];
-        $formConfig = $this->makeFormConfig($formConfig);
-
-        //Setzt im Formular-Objekt die Formular-Config
-        $this->formularObj->setConfig($formConfig);
+        $this->formularObj->setConfig($this->makeFormConfig($formConfig));
 
     }
 
@@ -78,13 +84,12 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
     {
         $adapter = $formConfig['adapter'];
 
-        foreach($adapter as $key => $value){
-            if (is_string($value))
-            {
-                if (isset($this->formDefinition['adapter']) && array_key_exists($value,$this->formDefinition['adapter'])){
+        foreach ($adapter as $key => $value) {
+            if (is_string($value)) {
+                if (isset($this->formDefinition['adapter']) && array_key_exists($value, $this->formDefinition['adapter'])) {
                     $tempAdapter = $this->formDefinition['adapter'][$value];
                     unset($formConfig['adapter'][$key]);
-                    $formConfig['adapter'] = array_merge($formConfig['adapter'],$tempAdapter);
+                    $formConfig['adapter'] = array_merge($formConfig['adapter'], $tempAdapter);
                 }
             }
         }
@@ -97,7 +102,8 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
      * @param JSON
      * @return Array
      */
-    private function decodeData($jsonData){
+    private function decodeData($jsonData)
+    {
 
         try {
             $data = Json\Json::decode($jsonData, Json\Json::TYPE_ARRAY);
