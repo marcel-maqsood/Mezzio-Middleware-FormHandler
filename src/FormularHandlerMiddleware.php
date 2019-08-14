@@ -17,21 +17,15 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
 
     const STATUS_MISSING_VALUE = 'MISSING_VALUE';
 
-    /**
-     * @var TemplateRendererInterface
-     */
-    private $renderer;
-
     private $formDefinition;
-
-    private $transport;
-
     private $problemDetails;
+    private $formularObj;
 
-    public function __construct($formDefinition,ProblemDetailsResponseFactory $problemDetails)
+    public function __construct($formDefinition, $formularObj, ProblemDetailsResponseFactory $problemDetails)
     {
         $this->formDefinition = $formDefinition;
         $this->problemDetails = $problemDetails;
+        $this->formularObj = $formularObj;
     }
 
     /**
@@ -45,7 +39,7 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
 
         if (is_null($dataArray) || !is_array($dataArray) || !array_key_exists($dataArray['data'])){
             return $this->problemDetails->createResponse(
-                $this->request,
+                $request,
                 400,
                 "Data was missing in submitted form.",
                 self::STATUS_MISSING_VALUE,
@@ -57,7 +51,7 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
 
         if (!array_key_exists($formData['config'])){
             return $this->problemDetails->createResponse(
-                $this->request,
+                $request,
                 400,
                 "Die Bezeichnung der Config fehlt",
                 self::STATUS_MISSING_VALUE,
@@ -65,12 +59,17 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
             );
         }
 
+        //Setzt im Formular Objekt die zum Array umgewandelten Daten des Post.
+        $this->formularObj->setRequestData($dataArray);
+
         // $formData['config']
         // damit bekommen wir nun die Config für das konkrete Formular
 
         $formConfig = $this->formDefinition['forms'][$formData['config']];
         $formConfig = $this->makeFormConfig($formConfig);
 
+        //Setzt im Formular-Objekt die Formular-Config
+        $this->formularObj->setConfig($formConfig);
 
     }
 
