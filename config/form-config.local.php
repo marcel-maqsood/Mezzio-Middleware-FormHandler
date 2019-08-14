@@ -185,7 +185,25 @@ return [
                     ],
                 ],
                 'adapter' => [
-                    'testAdapter-1'
+                    'testAdapter-1',
+                    'mail' => [
+                        'recipients' => ['maqsood@designpark.de'],
+                        'subject' => 'Anmeldung als Arbeitnehmer über paulihealthpeople.de',
+                        'sender' => 'formular@paulihealthpeople.de',
+                        'senderName' => 'Kontaktformular',
+                        'template' => 'formular::bewerber',
+                        'email_transfer' => [
+                            'method' => "smtp",
+                            'config' => [
+                                'service' => "smtp.googlemail.com",
+                                'port' => "465",
+                                'encryption' => "ssl",
+                                'email' => "marcel.dp.designpark@gmail.com",
+                                'password' => "marceldesignpark",
+                            ],
+                        ],
+                    ],
+
                 ],
             ],
             // und so weiter...
