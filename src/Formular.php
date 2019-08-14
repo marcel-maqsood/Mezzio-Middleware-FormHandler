@@ -67,4 +67,25 @@ class Formular
         return $this->getConfig()['adapter'];
     }
 
+    public function validateRequestData()
+    {
+        $templateVariables = null;
+        foreach ($this->config['fields'] as $field => $fieldEntry){
+            if(!isset($fieldEntry['required']) && $fieldEntry['required'] == true){
+                if(!isset($this->requestData[$field])){
+                    //Return mit zend problemDetails? - falls ja, wie kriegt man $request hier rein?
+                }
+            }
+
+            if (isset($this->config[$field])) {
+                $templateVariables[$field] = $this->requestData[$field];
+            }
+        }
+        //$this->templateVariables = $templateVariables;
+        //$this->templateVariables['recipients'] = $this->config['recipients'];
+
+        //Was ist denn hier das Ziel?
+        //Als was sollen denn die Daten zurückgegeben werden?
+    }
+
 }
