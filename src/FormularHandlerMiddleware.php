@@ -9,6 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Json\Json;
+use Zend\ProblemDetails\ProblemDetailsResponseFactory;
 
 
 class FormularHandlerMiddleware implements RequestHandlerInterface
@@ -25,9 +26,9 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
 
     private $transport;
 
-    private $problem_details;
+    private $problemDetails;
 
-    public function __construct($formDefinition, $problemDetails)
+    public function __construct($formDefinition,ProblemDetailsResponseFactory $problemDetails)
     {
         $this->formDefinition = $formDefinition;
         $this->problemDetails = $problemDetails;
@@ -67,8 +68,28 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
         // $formData['config']
         // damit bekommen wir nun die Config für das konkrete Formular
 
+        $formConfig = $this->formDefinition['forms'][$formData['config']];
+        $formConfig = $this->makeFormConfig($formConfig);
 
 
+    }
+
+
+    private function makeFormConfig($formConfig)
+    {
+        $adapter = $formConfig['adapter'];
+
+        foreach($adapter as $key => $value){
+            if (is_string($value))
+            {
+                if (isset($this->formDefinition['adapter']) && array_key_exists($value,$this->formDefinition['adapter'])){
+                    $tempAdapter = $this->formDefinition['adapter'][$value];
+                    unset($formConfig['adapter'][$key]);
+                    $formConfig['adapter'] = array_merge($formConfig['adapter'],$tempAdapter);
+                }
+            }
+        }
+        return $formConfig;
     }
 
     /**
