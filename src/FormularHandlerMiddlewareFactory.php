@@ -24,7 +24,7 @@ class FormularHandlerMiddlewareFactory
         */
 
         $formConfig = $container->get('config')['depaForm'];
-        $formularObj = $container->get(FormularFactory::class);
+        $formularObj = $container->get(Formular::class);
         $problemDetails = $container->get(ProblemDetailsResponseFactory::class);
         return new FormularHandlerMiddleware( $formConfig, $formularObj, $problemDetails);
     }

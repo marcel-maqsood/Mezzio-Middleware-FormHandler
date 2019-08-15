@@ -7,6 +7,7 @@ namespace depa\FormularHandlerMiddleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Json\Json;
 use Zend\ProblemDetails\ProblemDetailsResponseFactory;
@@ -52,13 +53,16 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
         if (!array_key_exists('config', $formData)) {
             return $this->problemDetails->createResponse(
                 $request,
-                400,
+                500,
                 "Der Verweis auf die Formular-Konfiguration fehlt. Das Formular benötigt ein entsprechendes Hidden-Feld mit dem Namen 'config'.",
                 self::STATUS_MISSING_VALUE,
                 "N/A"
             );
         }
 
+        $formConfig = $this->formDefinition['forms'][$formData['config']];
+
+        $this->formularObj->setConfig($this->makeFormConfig($formConfig));
         $this->formularObj->setRequestData($formData);
         $this->formularObj->validateRequestData();
         if ($this->formularObj->getErrorStatus()) {
@@ -70,20 +74,17 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
                 "N/A"
             );
         }
-
-        // $formData['config']
-        // damit bekommen wir nun die Config für das konkrete Formular
-
-        $formConfig = $this->formDefinition['forms'][$formData['config']];
-        $this->formularObj->setConfig($this->makeFormConfig($formConfig));
-
+        return new HtmlResponse("Nur Testweise - kam durch.");
     }
 
 
     private function makeFormConfig($formConfig)
     {
-        $adapter = $formConfig['adapter'];
+        if(!isset($formConfig['adapter']) || !is_array($formConfig['adapter'])){
+            return $formConfig;
+        }
 
+        $adapter = $formConfig['adapter'];
         foreach ($adapter as $key => $value) {
             if (is_string($value)) {
                 if (isset($this->formDefinition['adapter']) && array_key_exists($value, $this->formDefinition['adapter'])) {
