@@ -65,6 +65,7 @@ return [
                         'subject' => 'Anfrage über paulihealthpeople.de',
                         'sender' => 'formular@paulihealthpeople.de',
                         'senderName' => 'Kontaktformular',
+                        //Template bleibt in dieser Form nicht bestehen.
                         'template' => 'formular::contact',
                         'email_transfer' => [
                             'method' => "smtp",
@@ -162,7 +163,7 @@ return [
                     ],
                     'zipcode_arbeitgeber' => [
                         'required' => true,
-                        'type' => 'tel',
+                        'type' => 'text',
                     ],
                     'city_arbeitgeber' => [
                         'required' => true,
