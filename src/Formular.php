@@ -22,6 +22,8 @@ class Formular
 
     private $problemDetails;
 
+    private $validFields;
+
     //Es macht keinen Sinn, immer wieder das selbe zu definieren (FormularHandlerMiddleware...), constanten in eigene Klasse auslagern, die man über container abruft?
     const STATUS_MISSING_VALUE = 'MISSING_VALUE';
 
@@ -93,21 +95,31 @@ class Formular
 
     public function validateRequestData()
     {
-        $templateVariables = null;
-        foreach ($this->config['fields'] as $field => $fieldEntry) {
-            if (!isset($fieldEntry['required']) && $fieldEntry['required'] == true) {
-                if (!isset($this->requestData[$field])) {
-                    $this->setError('Ja Hier muss die Fehlermeldung rein');
+
+        if(!isset($this->config['fields']) || !is_array($this->config['fields'])){
+            $this->setError('The Form-Config is missing a definition for fields!');
+        }else{
+            $validFields = null;
+            foreach ($this->config['fields'] as $field => $fieldEntry) {
+                if (isset($fieldEntry['required']) && $fieldEntry['required'] == true) {
+                    if (!isset($this->requestData[$field])) {
+                        $this->setError('The field ' . $field . ' was not found in the submitted form!');
+                    }
+                }
+
+                if (isset($this->requestData[$field])) {
+                    $validFields[$field] = $this->requestData[$field];
                 }
             }
-
-            if (isset($this->config[$field])) {
-                $templateVariables[$field] = $this->requestData[$field];
-            }
+            $this->validFields = $validFields;
         }
-        //$this->templateVariables = $templateVariables;
-        //$this->templateVariables['recipients'] = $this->config['recipients'];
 
+
+
+    }
+
+    public function getValidFields(){
+        return $this->validFields;
     }
 
 }

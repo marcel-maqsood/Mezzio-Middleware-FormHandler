@@ -6,15 +6,13 @@ namespace depa\FormularHandlerMiddleware;
 
 
 use Zend\ProblemDetails\ProblemDetailsResponseFactory;
+use Psr\Container\ContainerInterface;
 
 class FormularFactory
 {
 
-    private $container;
-
-    public function __invoke(ContainerInterface $container) : callable
+    public function __invoke(ContainerInterface $container) : Formular
     {
-        $this->container = $container;
 
             return new Formular();
 
