@@ -10,7 +10,6 @@ abstract class AbstractAdapter implements AdapterInterface
 {
     protected $formularObj;
     protected $config;
-    protected $templateVariables;
 
     public function __construct(array $requestData, $formularObj)
     {
