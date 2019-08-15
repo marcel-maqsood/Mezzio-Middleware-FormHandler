@@ -17,7 +17,7 @@ class MailFactory
         $pdo = $container->get('config')['???']['mail'] ?? null;
 
         return new Mail(
-            $container->get(FormularFactory::class)
+            $container->get(Formular::class)
         );
     }
 }

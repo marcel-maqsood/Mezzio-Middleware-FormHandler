@@ -12,32 +12,56 @@ class Mail extends AbstractAdapter
 
     protected function checkConfig($config)
     {
-            $mailConfig = $config['adapter']['mail'];
-        if (!isset($mailConfig) || is_null($mailConfig) ||!is_array($mailConfig)){
+
+
+
+        if (!isset($config['adapter']['mail']) || is_null($config['adapter']['mail']) ||!is_array($config['adapter']['mail'])){
             //Hier ebenfalls zendproblem-details...
         }
+        $mailConfig = $config['adapter']['mail'];
 
-        $mailTransfer = $mailConfig['email_transfer'];
-        if(!isset($mailTransfer) || is_null($mailTransfer) || !is_array($mailTransfer)){
+        if(!isset($mailConfig['email_transfer']) || is_null($mailConfig['email_transfer']) || !is_array($mailConfig['email_transfer'])){
             //Fehler: keine gültige config für das versenden von mails
         }
+        $mailTransfer = $mailConfig['email_transfer'];
 
-        $mailTransferMethod = $mailTransfer['method'];
-        if(!isset($mailTransferMethod) || is_null($mailTransferMethod) || is_array($mailTransferMethod)){
+        if(!isset($mailTransfer['method']) || is_null($mailTransfer['method']) || is_array($mailTransfer['method'])){
             //Fehler: keine gültige definition für Transfer-Methode
         }
+        $mailTransferMethod = $mailTransfer['method'];
 
-        $mailTransferConfig = $mailTransfer['config'];
-        if(!isset($mailTransferConfig) || is_null($mailTransferConfig) || !is_array($mailTransferConfig)){
+        if(!isset($mailTransfer['config']) || is_null($mailTransfer['config']) || !is_array($mailTransfer['config'])){
             //Fehler: ungültige Config für Transfer-Methode
         }
+        $mailTransferConfig = $mailTransfer['config'];
 
+        if(!isset($mailConfig['recipients']) || is_null($mailConfig['recipients']) || !is_array($mailConfig['recipients'])){
+            //Fehler: ungültige definition von recipients
+        }
+        $mailRecipients = $mailConfig['recipients'];
+
+        if(!isset($mailConfig['subject']) || is_null($mailConfig['subject']) || !is_string($mailConfig['subject'])){
+            //Fehler: ungültige definition von Subject
+        }
+        $mailSubject = $mailConfig['subject'];
+
+        if(!isset($mailConfig['sender']) || is_null($mailConfig['sender']) || !is_string($mailConfig['sender'])){
+            //Fehler: ungültige definition von Subject
+        }
+        $mailSender = $mailConfig['sender'];
+
+        if(!isset($mailConfig['senderName']) || is_null($mailConfig['senderName']) || !is_string($mailConfig['senderName'])){
+            //Fehler: ungültige definition von Subject
+        }
+        $mailSenderName = $mailConfig['senderName'];
     }
 
     public function handleData() : ResponseInterface
     {
+
         //Verwenden eines try-catch blocks, um auch bei fehlern mit problem-details zu arbeiten.
         try{
+
             //die Daten, die hier drin sind, sind die Inhalte der Felder (mit Bezeichner), die mit der Config übereinstanden.
             $mailData =  $this->templateVariables;
             $mailMessage = "Anfrage über Formular von " . $mailData['name'] . " eingegangen!\n\nFolgende Nachricht wurde angehängt: " . $mailData['message']; //Message aufbau im Array des jeweiligen Formulars definieren?
