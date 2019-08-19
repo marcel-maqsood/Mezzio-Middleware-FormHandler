@@ -61,13 +61,7 @@ class Formular
     public function checkFormConfigFields()
     {
         if (!isset($this->getConfig()['fields']) || is_null($this->getConfig()['fields'] || !is_array($this->getConfig()['fields']))) {
-            return $this->problemDetails->createResponse(
-                $this->request,
-                400,
-                "No fields defined in Formular-Config.",
-                self::STATUS_MISSING_VALUE,
-                "N/A"
-            );
+            $this->setError("No fields defined in Formular-Config.");
         }
     }
 
@@ -132,13 +126,13 @@ class Formular
         switch ($driverName){
 
             case 'mail':
-                $driver = new Mail($this);
+                $driver = new Mail($this->config, $this->validFields);
                 break;
             case 'pdo':
-                $driver = new PdoDatabase($this);
+                $driver = new PdoDatabase($this->config, $this->validFields);
                 break;
             case 'wufoo':
-                $driver = new Wufoo($this);
+                $driver = new Wufoo($this->config, $this->validFields);
                 break;
         }
         return $driver;
