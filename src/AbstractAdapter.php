@@ -12,21 +12,20 @@ abstract class AbstractAdapter implements AdapterInterface
 
     protected $errorDescription = '';
 
-    protected $formularObj;
-
     protected $config;
 
-    public function __construct(Formular $formularObj)
-    {
-        $this->formularObj = $formularObj;
-        $this->config = $formularObj->getConfig();
+    protected $validFields;
 
+    public function __construct(array $config = [], array $validFields = [])
+    {
+        $this->config = $config;
+        $this->validFields = $validFields;
         //es gibt in der config 2 bereiche. bereich a definiert die formularelemente, bereich b definiert den/die adapter
         $ret = $this->checkConfig($this->config);
         if (is_null($ret)){
             return $ret;
         }
-        return $this->handleData($formularObj->getValidFields());
+        return $this->handleData();
     }
 
     public function setError($errorDescription)
