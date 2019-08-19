@@ -4,6 +4,10 @@
 namespace depa\FormularHandlerMiddleware;
 
 
+use depa\FormularHandlerMiddleware\Adapter\Mail;
+use depa\FormularHandlerMiddleware\Adapter\PdoDatabase;
+use depa\FormularHandlerMiddleware\Adapter\Wufoo;
+
 class Formular
 {
     /**
@@ -114,12 +118,30 @@ class Formular
             $this->validFields = $validFields;
         }
 
-
-
     }
 
     public function getValidFields(){
         return $this->validFields;
+    }
+
+    public function createDriver(){
+
+        $driverName = strtolower(key($this->getFormConfigAdapter()));
+
+        $driver = null;
+        switch ($driverName){
+
+            case 'mail':
+                $driver = new Mail($this);
+                break;
+            case 'pdo':
+                $driver = new PdoDatabase($this);
+                break;
+            case 'wufoo':
+                $driver = new Wufoo($this);
+                break;
+        }
+        return $driver;
     }
 
 }
