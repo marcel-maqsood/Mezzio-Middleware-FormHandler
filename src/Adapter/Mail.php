@@ -13,6 +13,7 @@ class Mail extends AbstractAdapter
 {
 
     private $transport;
+
     protected function checkConfig($config)
     {
         if(!isset($config['adapter']) || is_null($config['adapter']) || !is_array($config['adapter'])){
@@ -77,9 +78,11 @@ class Mail extends AbstractAdapter
         return $config;
     }
 
-    public function handleData() : ResponseInterface
+    public function handleData(
+        
+    ) : ResponseInterface
     {
-        $formData = $this->formularObj->getValidFields();
+        $formData = $this->validFields;
         $mailData = $this->config['adapter']['mail'];
 
         //Verwenden eines try-catch blocks, um auch bei fehlern mit problem-details zu arbeiten.
