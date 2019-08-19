@@ -74,7 +74,19 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
                 "N/A"
             );
         }
-        return new HtmlResponse("Nur Testweise - kam durch.");
+
+        $dataDriver = $this->formularObj->createDriver();
+        if($dataDriver->getErrorStatus()){
+            return $this->problemDetails->createResponse(
+                $request,
+                500,
+                $dataDriver->getErrorDescription(),
+                self::STATUS_MISSING_VALUE,
+                "N/A"
+            );
+        }
+
+        return new HtmlResponse("Hurra, Die Mail wurde fehlerfrei verschickt!");
     }
 
 
