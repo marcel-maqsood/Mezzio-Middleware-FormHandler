@@ -86,11 +86,12 @@ class Mail extends AbstractAdapter
         try{
             $this->transport = $this->currentTransferer();
             //Message in Config-Array des Formulars aufbauen - dabei die field-names mit {} umklammern, um es für das System erkennbar zu machen?
+            //$mailMessage = $this->renderTemplate($formData, $mailData['template'], $mailData);
             $loader = new \Twig\Loader\ArrayLoader([
                 'test.html' => $mailData['template'],
             ]);
             $twig = new \Twig\Environment($loader);
-            $mailMessage = $twig->render('test.html', $mailData);
+            $mailMessage = $twig->render('test.html', $formData);
             foreach ($mailData['recipients'] as $recipient){
                 $mailer = new \Swift_Mailer($this->transport);
                 $message = (new \Swift_Message())
