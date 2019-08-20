@@ -28,17 +28,29 @@ abstract class AbstractAdapter implements AdapterInterface
         return $this->handleData();
     }
 
-    public function setError($errorDescription)
+    /**
+     * Setzt einen Error mit Beschreibung.
+     * @param $errorDescription
+     */
+    protected function setError($errorDescription)
     {
         $this->errorStatus = true;
         $this->errorDescription = $errorDescription;
     }
 
+    /**
+     * Gibt ein Boolean zurück, der aussagt ob es ein Fehler gab oder nicht.
+     * @return bool
+     */
     public function getErrorStatus()
     {
         return $this->errorStatus;
     }
 
+    /**
+     *
+     * @return string
+     */
     public function getErrorDescription()
     {
         return $this->errorDescription;
