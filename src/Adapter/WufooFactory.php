@@ -3,13 +3,15 @@
 
 namespace depa\FormularHandlerMiddleware\Adapter;
 
-use PDO;
+use depa\FormularHandlerMiddleware\Formular;
+use \PDO;
 use Psr\Container\ContainerInterface;
 
 class WufooFactory
 {
     /**
-     * @throws Exception\InvalidConfigException
+     * @param ContainerInterface $container
+     * @return Wufoo
      */
     public function __invoke(ContainerInterface $container) : Wufoo
     {
