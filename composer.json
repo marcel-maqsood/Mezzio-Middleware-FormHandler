@@ -19,7 +19,7 @@
         "true/punycode": "^2.1",
         "zendframework/zend-problem-details": "^1.0",
         "zendframework/zend-json": "^3.1",
-        "depa/middleware-formularhandler": "^1.0"
+        "zendframework/zend-diactoros": "^2.1"
     },
 
     "authors":      [

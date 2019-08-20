@@ -5,15 +5,18 @@ namespace depa\FormularHandlerMiddleware\Adapter;
 
 
 use depa\FormularHandlerMiddleware\AbstractAdapter;
-use depa\FormularHandlerMiddleware\Formular;
 use Psr\Http\Message\ResponseInterface;
-use Zend\Diactoros\Response\HtmlResponse;
 
 class Mail extends AbstractAdapter
 {
 
     private $transport;
 
+    /**
+     * Prüft die übergebene Config (beinhaltet den Adapter) nach den benötigten Werten.
+     * @param $config
+     * @return |null
+     */
     protected function checkConfig($config)
     {
         if(!isset($config['adapter']) || is_null($config['adapter']) || !is_array($config['adapter'])){
@@ -38,46 +41,44 @@ class Mail extends AbstractAdapter
             parent::setError('There is no method defined inside the email_transfer config!');
             return null;
         }
-        $mailTransferMethod = $mailTransfer['method'];
 
         if(!isset($mailTransfer['config']) || is_null($mailTransfer['config']) || !is_array($mailTransfer['config'])){
             //Fehler: ungültige Config für Transfer-Methode
             parent::setError('There is no mail-config defined inside the email_transfer config!');
             return null;
         }
-        $mailTransferConfig = $mailTransfer['config'];
 
         if(!isset($mailConfig['recipients']) || is_null($mailConfig['recipients']) || !is_array($mailConfig['recipients'])){
             //Fehler: ungültige definition von recipients
             parent::setError('recipients-arraay is not properly defined in email_transfer-config!');
             return null;
         }
-        $mailRecipients = $mailConfig['recipients'];
 
         if(!isset($mailConfig['subject']) || is_null($mailConfig['subject']) || !is_string($mailConfig['subject'])){
             //Fehler: ungültige definition von Subject
             parent::setError('Thereis no subject defined inside the transfer_config!');
             return null;
         }
-        $mailSubject = $mailConfig['subject'];
 
         if(!isset($mailConfig['sender']) || is_null($mailConfig['sender']) || !is_string($mailConfig['sender'])){
             //Fehler: ungültige definition von Subject
             parent::setError('Thereis no sender defined inside the transfer_config!');
             return null;
         }
-        $mailSender = $mailConfig['sender'];
 
         if(!isset($mailConfig['senderName']) || is_null($mailConfig['senderName']) || !is_string($mailConfig['senderName'])){
             //Fehler: ungültige definition von Subject
             parent::setError('Thereis no senderName defined inside the transfer_config!');
             return null;
         }
-        $mailSenderName = $mailConfig['senderName'];
 
         return $config;
     }
 
+    /**
+     * Versendet eine Email an die in der Array-Config hinterlegten recipient(s), basierend auf dem dort definierten Template.
+     * @return ResponseInterface
+     */
     public function handleData(
         
     ) : ResponseInterface
@@ -94,6 +95,7 @@ class Mail extends AbstractAdapter
                 'test.html' => $mailData['template'],
             ]);
             $twig = new \Twig\Environment($loader);
+
             $mailMessage = $twig->render('test.html', $formData);
             foreach ($mailData['recipients'] as $recipient){
                 $mailer = new \Swift_Mailer($this->transport);
@@ -114,11 +116,7 @@ class Mail extends AbstractAdapter
     }
 
     /**
-     * @param $transfer_config
-     *
-     * Gibt den zu benutzenden Transport-Weg von Swift zurück, der bereits configuriert ist, sofern alles klappt.
-     *
-     * @return mixed
+     * @return \Swift_SmtpTransport|null
      */
     private function currentTransferer()
     {
@@ -126,58 +124,37 @@ class Mail extends AbstractAdapter
 
         if (!isset($transfer_config['method'])
             || is_null($transfer_config['method'])) {
-            $this->respond(
-                "transfer-method must be set!",
-                400,
-                self::STATUS_CONFIG_ERROR
-            );
+            parent::setError("transfer-method must be set!");
         }
+
+        $transport = null;
         $method = $transfer_config['method'];
         $transfer_config = $transfer_config['config'];
         switch ($method) {
             case "smtp":
                 if (!isset($transfer_config['service']) || is_null($transfer_config['service'])) {
-                    $this->respond(
-                        "SMTP transfer-method requires a service to use!",
-                        400,
-                        self::STATUS_CONFIG_ERROR
-                    );
+                    parent::setError("SMTP transfer-method requires a service to use!");
                 }
                 $service = $transfer_config['service'];
 
                 if (!isset($transfer_config['port']) || is_null($transfer_config['port'])) {
-                    $this->respond(
-                        "SMTP transfer-method requires a port to use!",
-                        400,
-                        self::STATUS_CONFIG_ERROR
-                    );
+                    parent::setError("SMTP transfer-method requires a port to use!");
+
                 }
                 $port = $transfer_config['port'];
 
                 if (!isset($transfer_config['encryption']) || is_null($transfer_config['encryption'])) {
-                    $this->respond(
-                        "SMTP transfer-method requires a encryption method!",
-                        400,
-                        self::STATUS_CONFIG_ERROR
-                    );
+                    parent::setError("SMTP transfer-method requires a encryption method!");
                 }
                 $encryption = $transfer_config['encryption'];
 
                 if (!isset($transfer_config['email']) || is_null($transfer_config['email'])) {
-                    $this->respond(
-                        "SMTP transfer-method requires a email!",
-                        400,
-                        self::STATUS_CONFIG_ERROR
-                    );
+                    parent::setError("SMTP transfer-method requires a email!");
                 }
                 $email = $transfer_config['email'];
 
                 if (!isset($transfer_config['password']) || is_null($transfer_config['password'])) {
-                    $this->respond(
-                        "SMTP transfer-method requires the password of " . $email . "!",
-                        400,
-                        self::STATUS_CONFIG_ERROR
-                    );
+                    parent::setError("SMTP transfer-method requires the password of " . $email . "!");
                 }
                 $password = $transfer_config['password'];
 
@@ -190,31 +167,4 @@ class Mail extends AbstractAdapter
         }
         return $transport;
     }
-
-    /**
-     * Ersetzt alle übergebenen Templatevariablen im Email-Template.
-     *
-     * @param Array $data Ersetzungen im Format Templatevariable => Ersetzungswert
-     * @param string $template Template, in dem die Variablen ersetzt werden sollen
-     * @return string Template mit ersetzten Werten.
-     */
-    private function renderTemplate($data, $template, $config)
-    {
-        $replacementFunction = function ($match) use ($data, $config)
-        {
-            $match = str_replace(['{', '}'], '', $match[0]);
-            if (array_key_exists($match, $data))
-            {
-                return $data[$match];
-            }
-            else
-            {
-                return $config['emptyReplacement'];
-            }
-        };
-        $template = preg_replace_callback("({[^\n}]*})", $replacementFunction, $template);
-        return $template;
-
-    }
-
 }
