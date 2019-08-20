@@ -15,8 +15,14 @@ class Formular
      */
     private $config;
 
+    /**
+     * @var bool
+     */
     private $errorStatus = false;
 
+    /**
+     * @var string
+     */
     private $errorDescription = '';
 
     /**
@@ -24,8 +30,10 @@ class Formular
      */
     private $requestData;
 
-    private $problemDetails;
-
+    /**
+     *
+     * @var array
+     */
     private $validFields;
 
     //Es macht keinen Sinn, immer wieder das selbe zu definieren (FormularHandlerMiddleware...), constanten in eigene Klasse auslagern, die man über container abruft?
@@ -38,26 +46,45 @@ class Formular
         $this->requestData = $requestData;
     }
 
+    /**
+     * Gibt die im Formular-Objekt gespeicherten Fomular-Daten zurück.
+     * @return array
+     */
     public function getRequestData(): array
     {
         return $this->requestData;
     }
 
+    /**
+     * Setzt die Formular-Daten im Formular-Objekt
+     * @param array $data
+     */
     public function setRequestData(array $data)
     {
         $this->requestData = $data;
     }
 
+    /**
+     * Gibt die im Formular-Objekt gespeicherte Array-Config des Formulars zurück
+     * @return array
+     */
     public function getConfig()
     {
         return $this->config;
     }
 
+    /**
+     * Setzt die Array-Config des Formulars im Formular-Objekt
+     * @param array $data
+     */
     public function setConfig(array $data)
     {
         $this->config = $data;
     }
 
+    /**
+     *Prüft, ob "fields" in der Aray-Config des Formulars definiert wurde.
+     */
     public function checkFormConfigFields()
     {
         if (!isset($this->getConfig()['fields']) || is_null($this->getConfig()['fields'] || !is_array($this->getConfig()['fields']))) {
@@ -65,32 +92,56 @@ class Formular
         }
     }
 
+    /**
+     * Setzt einen Error mit Beschreibung.
+     * @param $errorDescription
+     */
     private function setError($errorDescription)
     {
         $this->errorStatus = true;
         $this->errorDescription = $errorDescription;
     }
 
+    /**
+     * Gibt ein Boolean zurück, der aussagt ob es ein Fehler gab oder nicht.
+     * @return bool
+     */
     public function getErrorStatus()
     {
         return $this->errorStatus;
     }
 
+    /**
+     *
+     * @return string
+     */
     public function getErrorDescription()
     {
         return $this->errorDescription;
     }
 
+    /**
+     * Gibt die in der Array-Config des Formulars definierten Felder zurück.
+     * @return mixed
+     */
     public function getFormConfigFields()
     {
         return $this->getConfig()['fields'];
     }
 
+    /**
+     * Gibt den in der Array-Config des Formulars definierten Adapter zurück.
+     * @return mixed
+     */
     public function getFormConfigAdapter()
     {
         return $this->getConfig()['adapter'];
     }
 
+    /**
+     * Prüft, ob die Daten des Request alle Felder beinhalten,
+     * die in der Array-Config des Formulars als "required" definiert wurden.
+     */
     public function validateRequestData()
     {
 
@@ -114,10 +165,18 @@ class Formular
 
     }
 
+    /**
+     * Gibt die Felder zurück, die in der validateRequestData funktion als vorhanden in der Array-Config gespeichert wurden.
+     * @return array
+     */
     public function getValidFields(){
         return $this->validFields;
     }
 
+    /**
+     * Erstellt einen Treiber, auf welcher Basis die Daten des Formulars abgespeichert/versendet werden.
+     * @return Mail|PdoDatabase|Wufoo|null
+     */
     public function createDriver(){
 
         $driverName = strtolower(key($this->getFormConfigAdapter()));
