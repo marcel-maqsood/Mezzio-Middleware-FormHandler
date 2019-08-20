@@ -8,7 +8,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Diactoros\Response\JsonResponse;
 use Zend\Json\Json;
 use Zend\ProblemDetails\ProblemDetailsResponseFactory;
 
@@ -18,8 +17,19 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
 
     const STATUS_MISSING_VALUE = 'MISSING_VALUE';
 
+    /**
+     * @var Array
+     */
     private $formDefinition;
+
+    /**
+     * @var ProblemDetailsResponseFactory
+     */
     private $problemDetails;
+
+    /**
+     * @var Formular
+     */
     private $formularObj;
 
     public function __construct($formDefinition, Formular $formularObj, ProblemDetailsResponseFactory $problemDetails)
@@ -65,6 +75,7 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
         $this->formularObj->setConfig($this->makeFormConfig($formConfig));
         $this->formularObj->setRequestData($formData);
         $this->formularObj->validateRequestData();
+
         if ($this->formularObj->getErrorStatus()) {
             return $this->problemDetails->createResponse(
                 $request,
@@ -82,14 +93,19 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
                 500,
                 $dataDriver->getErrorDescription(),
                 self::STATUS_MISSING_VALUE,
-                "N/A"
+                'N/A'
             );
         }
-
         return new HtmlResponse("Hurra, Die Mail wurde fehlerfrei verschickt!");
     }
 
-
+    /**
+     * Scannt die Config des Formulars nach definierten Adapter-Namen ab,
+     * um an stelle des Namen ein tatsächliches config-Array einzubauen.
+     *
+     * @param $formConfig
+     * @return mixed
+     */
     private function makeFormConfig($formConfig)
     {
         if(!isset($formConfig['adapter']) || !is_array($formConfig['adapter'])){
@@ -107,33 +123,5 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
             }
         }
         return $formConfig;
-    }
-
-    /**
-     * Wandelt Request-Daten in PHP-Array um.
-     *
-     * @param JSON
-     * @return Array
-     */
-    private function decodeData($jsonData)
-    {
-
-        try {
-            $data = Json\Json::decode($jsonData, Json\Json::TYPE_ARRAY);
-        } catch (Exception $e) {
-            return $this->respond(
-                "Error decoding request. Expecting valid JSON!",
-                400,
-                self::STATUS_INVALID_REQUEST
-            );
-        }
-        if (!array_key_exists('action', $data) || !array_key_exists('data', $data)) {
-            return $this->respond(
-                "Error decoding request. Invalid format!",
-                400,
-                self::STATUS_INVALID_REQUEST
-            );
-        }
-        return $data;
     }
 }
