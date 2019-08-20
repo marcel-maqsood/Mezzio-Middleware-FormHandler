@@ -5,6 +5,7 @@ namespace depa\FormularHandlerMiddleware\Adapter;
 
 
 use depa\FormularHandlerMiddleware\AbstractAdapter;
+use Psr\Http\Message\ResponseInterface;
 
 class PdoDatabase extends AbstractAdapter
 {
@@ -14,8 +15,9 @@ class PdoDatabase extends AbstractAdapter
         // TODO: Implement checkConfig() method.
     }
 
-    public function handleData()
+    public function handleData() : ResponseInterface
     {
         // TODO: Implement handleData() method.
+        return null;
     }
 }

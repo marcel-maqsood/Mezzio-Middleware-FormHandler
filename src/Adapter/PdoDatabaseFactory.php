@@ -9,6 +9,8 @@ use Psr\Container\ContainerInterface;
 class PdoDatabaseFactory
 {
     /**
+     * @param ContainerInterface $container
+     * @return PdoDatabase
      * @throws Exception\InvalidConfigException
      */
     public function __invoke(ContainerInterface $container) : PdoDatabase
