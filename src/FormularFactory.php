@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace depa\FormularHandlerMiddleware;
 
-
-use Zend\ProblemDetails\ProblemDetailsResponseFactory;
 use Psr\Container\ContainerInterface;
 
 class FormularFactory
