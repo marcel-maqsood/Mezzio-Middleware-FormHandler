@@ -21,11 +21,10 @@ abstract class AbstractAdapter implements AdapterInterface
         $this->config = $config;
         $this->validFields = $validFields;
         //es gibt in der config 2 bereiche. bereich a definiert die formularelemente, bereich b definiert den/die adapter
-        $ret = $this->checkConfig($this->config);
-        if (is_null($ret)){
-            return $ret;
+        $this->checkConfig($this->config);
+        if (!$this->errorStatus){
+            return $this->handleData();
         }
-        return $this->handleData();
     }
 
     /**
@@ -58,5 +57,5 @@ abstract class AbstractAdapter implements AdapterInterface
 
     abstract protected function checkConfig($config);
 
-    abstract public function handleData():ResponseInterface;
+    abstract public function handleData();
 }

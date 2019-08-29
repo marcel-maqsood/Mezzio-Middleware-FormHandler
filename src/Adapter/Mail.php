@@ -5,7 +5,7 @@ namespace depa\FormularHandlerMiddleware\Adapter;
 
 
 use depa\FormularHandlerMiddleware\AbstractAdapter;
-use Psr\Http\Message\ResponseInterface;
+use depa\FormularHandlerMiddleware\Formular;
 
 class Mail extends AbstractAdapter
 {
@@ -56,19 +56,19 @@ class Mail extends AbstractAdapter
 
         if(!isset($mailConfig['subject']) || is_null($mailConfig['subject']) || !is_string($mailConfig['subject'])){
             //Fehler: ungültige definition von Subject
-            parent::setError('Thereis no subject defined inside the transfer_config!');
+            parent::setError('There is no subject defined inside the transfer_config!');
             return null;
         }
 
         if(!isset($mailConfig['sender']) || is_null($mailConfig['sender']) || !is_string($mailConfig['sender'])){
             //Fehler: ungültige definition von Subject
-            parent::setError('Thereis no sender defined inside the transfer_config!');
+            parent::setError('There is no sender defined inside the transfer_config!');
             return null;
         }
 
         if(!isset($mailConfig['senderName']) || is_null($mailConfig['senderName']) || !is_string($mailConfig['senderName'])){
             //Fehler: ungültige definition von Subject
-            parent::setError('Thereis no senderName defined inside the transfer_config!');
+            parent::setError('There is no senderName defined inside the transfer_config!');
             return null;
         }
 
@@ -81,8 +81,7 @@ class Mail extends AbstractAdapter
      */
     public function handleData(
         
-    ) : ResponseInterface
-    {
+    ){
         $formData = $this->validFields;
         $mailData = $this->config['adapter']['mail'];
 
@@ -110,9 +109,7 @@ class Mail extends AbstractAdapter
             //hier nichts zurückgeben, damit das program (später) weiß, dass hier alles gut ging und ein 200er gegeben werden kann.
         }catch(\Exception $e){
             parent::setError('Error occourd in: ' . $e->getFile() . ' on line: ' . $e->getLine() . ' with message: ' . $e->getMessage());
-            return new HtmlResponse('Error');
         }
-        return new HtmlResponse('Ok');
     }
 
     /**
@@ -161,7 +158,6 @@ class Mail extends AbstractAdapter
                 $transport = (new \Swift_SmtpTransport($service, $port, $encryption))
                     ->setUsername($email)
                     ->setPassword($password);
-
                 break;
             //Hier können weitere Funktioen angefügt werden,
         }
