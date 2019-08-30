@@ -80,14 +80,13 @@ class Mail extends AbstractAdapter
      * @return ResponseInterface
      */
     public function handleData(
-        
+
     ){
         $formData = $this->validFields;
         $mailData = $this->config['adapter']['mail'];
 
         //Verwenden eines try-catch blocks, um auch bei fehlern mit problem-details zu arbeiten.
         try{
-            $this->transport = $this->currentTransferer();
             //Message in Config-Array des Formulars aufbauen - dabei die field-names mit {} umklammern, um es für das System erkennbar zu machen?
             //$mailMessage = $this->renderTemplate($formData, $mailData['template'], $mailData);
             $loader = new \Twig\Loader\ArrayLoader([
@@ -96,16 +95,8 @@ class Mail extends AbstractAdapter
             $twig = new \Twig\Environment($loader);
 
             $mailMessage = $twig->render('test.html', $formData);
-            foreach ($mailData['recipients'] as $recipient){
-                $mailer = new \Swift_Mailer($this->transport);
-                $message = (new \Swift_Message())
-                    ->setSubject($mailData['subject'])
-                    ->setFrom([$mailData['sender'] => $mailData['senderName']])
-                    ->setTo([$recipient])
-                    ->setBody($mailMessage);
-                $mailer->send($message);
 
-            }
+            $this->sendMail($mailData, $mailMessage);
             //hier nichts zurückgeben, damit das program (später) weiß, dass hier alles gut ging und ein 200er gegeben werden kann.
         }catch(\Exception $e){
             parent::setError('Error occourd in: ' . $e->getFile() . ' on line: ' . $e->getLine() . ' with message: ' . $e->getMessage());
@@ -113,9 +104,9 @@ class Mail extends AbstractAdapter
     }
 
     /**
-     * @return \Swift_SmtpTransport|null
+     *
      */
-    private function currentTransferer()
+    private function sendMail($mailData, $mailMessage)
     {
         $transfer_config = $this->config['adapter']['mail']['email_transfer'];
 
@@ -158,9 +149,32 @@ class Mail extends AbstractAdapter
                 $transport = (new \Swift_SmtpTransport($service, $port, $encryption))
                     ->setUsername($email)
                     ->setPassword($password);
+
+                foreach ($mailData['recipients'] as $recipient){
+                    $mailer = new \Swift_Mailer($transport);
+                    $message = (new \Swift_Message())
+                        ->setSubject($mailData['subject'])
+                        ->setFrom([$mailData['sender'] => $mailData['senderName']])
+                        ->setTo([$recipient])
+                        ->setBody($mailMessage);
+                    $mailer->send($message);
+                }
                 break;
+            case 'php':
+                foreach ($mailData['recipients'] as $recipient){
+                    $header = array(
+                        'From' => $mailData['sender']
+                    );
+                    mail(
+                        $recipient,
+                        $mailData['subject'],
+                        $mailMessage,
+                        $header
+                    );
+                    break;
+                }
+                
             //Hier können weitere Funktioen angefügt werden,
         }
-        return $transport;
     }
 }
