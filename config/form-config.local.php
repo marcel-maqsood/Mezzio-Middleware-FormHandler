@@ -5,7 +5,7 @@ return [
     'depaForm' => [
         'adapter' => [
             'testAdapter-1' => [
-                'mail' => [
+                'smtpmail' => [
                     'recipients' => ['maqsood@designpark.de'],
                     'subject' => 'Anmeldung als Arbeitnehmer über paulihealthpeople.de',
                     'sender' => 'formular@paulihealthpeople.de',
@@ -60,7 +60,7 @@ return [
                     ],
                 ],
                 'adapter' => [
-                    'mail' => [
+                    'smtpmail' => [
                         'recipients' => ['maqsood@designpark.de'],
                         'subject' => 'Anfrage über paulihealthpeople.de',
                         'sender' => 'formular@paulihealthpeople.de',
@@ -118,7 +118,7 @@ return [
                     ],
                 ],
                 'adapter' => [
-                    'mail' => [
+                    'smtpmail' => [
                         'recipients' => ['maqsood@designpark.de'],
                         'subject' => 'Anmeldung als Arbeitnehmer über paulihealthpeople.de',
                         'sender' => 'formular@paulihealthpeople.de',
@@ -187,7 +187,7 @@ return [
                 ],
                 'adapter' => [
                     'testAdapter-1',
-                    'mail' => [
+                    'smtpmail' => [
                         'recipients' => ['maqsood@designpark.de'],
                         'subject' => 'Anmeldung als Arbeitnehmer über paulihealthpeople.de',
                         'sender' => 'formular@paulihealthpeople.de',
