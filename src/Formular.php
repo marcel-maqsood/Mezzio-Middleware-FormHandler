@@ -4,7 +4,8 @@
 namespace depa\FormularHandlerMiddleware;
 
 
-use depa\FormularHandlerMiddleware\Adapter\Mail;
+use depa\FormularHandlerMiddleware\Adapter\SmtpMail;
+use depa\FormularHandlerMiddleware\Adapter\PhpMail;
 use depa\FormularHandlerMiddleware\Adapter\PdoDatabase;
 use depa\FormularHandlerMiddleware\Adapter\Wufoo;
 
@@ -175,7 +176,7 @@ class Formular
 
     /**
      * Erstellt einen Treiber, auf welcher Basis die Daten des Formulars abgespeichert/versendet werden.
-     * @return Mail|PdoDatabase|Wufoo|null
+     * @return SmtpMail|PdoDatabase|Wufoo|null
      */
     public function createDriver(){
 
@@ -184,8 +185,11 @@ class Formular
         $driver = null;
         switch ($driverName){
 
-            case 'mail':
-                $driver = new Mail($this->config, $this->validFields);
+            case 'smtpmail':
+                $driver = new SmtpMail($this->config, $this->validFields);
+                break;
+            case 'phpmail':
+                $driver = new PhpMail($this->config, $this->validFields);
                 break;
             case 'pdo':
                 $driver = new PdoDatabase($this->config, $this->validFields);
