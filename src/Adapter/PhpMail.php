@@ -84,6 +84,9 @@ class PhpMail extends AbstractAdapter
     private function sendMail($mailData, $mailMessage)
     {
 
+        if(!is_null($this->subject)){
+            $mailData['subject'] = str_replace('{subject}', $this->subject, $mailData['subject']);
+        }
         foreach ($mailData['recipients'] as $recipient) {
             $header = array(
                 'From' => $mailData['sender']

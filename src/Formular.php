@@ -183,13 +183,18 @@ class Formular
         $driverName = strtolower(key($this->getFormConfigAdapter()));
 
         $driver = null;
-        switch ($driverName){
 
+        $subject = "[Dynamischer Text ohne Inhalt definiert!]";
+        if(isset($this->requestData['subject'])){
+            $subject = $this->requestData['subject'];
+        }
+
+        switch ($driverName){
             case 'smtpmail':
-                $driver = new SmtpMail($this->config, $this->validFields);
+                $driver = new SmtpMail($this->config, $this->validFields, $subject);
                 break;
             case 'phpmail':
-                $driver = new PhpMail($this->config, $this->validFields);
+                $driver = new PhpMail($this->config, $this->validFields, $subject);
                 break;
             case 'pdo':
                 $driver = new PdoDatabase($this->config, $this->validFields);

@@ -105,6 +105,9 @@ class SmtpMail extends AbstractAdapter
     {
         $transport = $this->createTransporter();
 
+        if(!is_null($this->subject)){
+            $mailData['subject'] = str_replace('{subject}', $this->subject, $mailData['subject']);
+        }
         foreach ($mailData['recipients'] as $recipient) {
             $mailer = new \Swift_Mailer($transport);
             $message = (new \Swift_Message())
