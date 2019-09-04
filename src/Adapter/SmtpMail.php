@@ -103,6 +103,8 @@ class SmtpMail extends AbstractAdapter
      */
     private function sendMail($mailData, $mailMessage)
     {
+
+        $replyTo = $this->validFields[$this->config['emailField']];
         $transport = $this->createTransporter();
 
         if(!is_null($this->subject)){
@@ -114,7 +116,8 @@ class SmtpMail extends AbstractAdapter
                 ->setSubject($mailData['subject'])
                 ->setFrom([$mailData['sender'] => $mailData['senderName']])
                 ->setTo([$recipient])
-                ->setBody($mailMessage);
+                ->setBody($mailMessage)
+                ->setReplyTo($replyTo);
             $mailer->send($message);
         }
     }
