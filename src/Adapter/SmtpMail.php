@@ -129,6 +129,10 @@ class SmtpMail extends AbstractAdapter
                 $replyTo = $this->validFields[$mailData['reply-to']['field']];
             }
         }
+        if(is_null($replyTo)){
+            $this->setError('no reply-to email found.');
+            return null;
+        }
         return $replyTo;
     }
 
