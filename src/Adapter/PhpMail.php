@@ -133,11 +133,9 @@ class PhpMail extends AbstractAdapter
             'From' => $mailData['sender'],
         );
         if(!is_null($replyTo)){
-            array_push(
-                $header,
-                ['Reply-To' => $replyTo]
-            );
+            $header['Reply-to'] = $replyTo;
         }
+
         foreach ($mailData['recipients'] as $recipient) {
 
             mail(
