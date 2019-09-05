@@ -96,9 +96,6 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
                 'N/A'
             );
         }
-
-
-
         return new JsonResponse(
             'The email was successfully sent!',
             200,
