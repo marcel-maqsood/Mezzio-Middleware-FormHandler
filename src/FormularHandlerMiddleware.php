@@ -7,7 +7,7 @@ namespace depa\FormularHandlerMiddleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Diactoros\Response\JsonResponse;
 use Zend\Json\Json;
 use Zend\ProblemDetails\ProblemDetailsResponseFactory;
 
@@ -96,7 +96,14 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
                 'N/A'
             );
         }
-        return new HtmlResponse("Hurra, Die Mail wurde fehlerfrei verschickt!");
+
+
+
+        return new JsonResponse(
+            'The email was successfully sent!',
+            200,
+            ['Content-Type' => ['application/json'], 'cache-control' => ['no-cache, must-revalidate']]
+        );
     }
 
     /**
