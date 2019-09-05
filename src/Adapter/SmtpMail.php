@@ -77,24 +77,59 @@ class SmtpMail extends AbstractAdapter
     public function handleData()
     {
         $formData = $this->validFields;
-        $mailData = $this->config['adapter']['smtpmail'];
+        $mailConfig = $this->config['adapter']['smtpmail'];
 
         //Verwenden eines try-catch blocks, um auch bei fehlern mit problem-details zu arbeiten.
         try {
             //Message in Config-Array des Formulars aufbauen - dabei die field-names mit {} umklammern, um es für das System erkennbar zu machen?
             //$mailMessage = $this->renderTemplate($formData, $mailData['template'], $mailData);
             $loader = new \Twig\Loader\ArrayLoader([
-                'test.html' => $mailData['template'],
+                'test.html' => $mailConfig['template'],
             ]);
             $twig = new \Twig\Environment($loader);
 
             $mailMessage = $twig->render('test.html', $formData);
 
-            $this->sendMail($mailData, $mailMessage);
+            $this->sendMail($mailConfig, $mailMessage);
             //hier nichts zurückgeben, damit das program (später) weiß, dass hier alles gut ging und ein 200er gegeben werden kann.
         } catch (\Exception $e) {
             parent::setError('Error occourd in: ' . $e->getFile() . ' on line: ' . $e->getLine() . ' with message: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * @param $mailData
+     * @return |null
+     */
+    private function replyTo($mailData){
+
+        $replyTo = null;
+        if(!isset($mailData['reply-to']) || !is_array($mailData['reply-to'])){
+            $this->setError('reply-to not found in adapter!');
+            return null;
+        }
+        if(!isset($mailData['reply-to']['status'])){
+            $this->setError('reply-to status not found!');
+            return null;
+        }
+
+        if($mailData['reply-to']['status']){
+            if(!isset($mailData['reply-to']['field'])){
+                foreach ($this->config['fields'] as $key => $field){
+                    if(isset($field['type']) && $field['type']  == 'email'){
+                        $replyTo = $this->validFields[$key];
+                        break;
+                    }
+                }
+            }else{
+                if(!isset($this->validFields[$mailData['reply-to']['field']]) || is_array($this->validFields[$mailData['reply-to']['field']]) || is_null($this->validFields[$mailData['reply-to']['field']])){
+                    $this->setError('reply-to field not found');
+                    return null;
+                }
+                $replyTo = $this->validFields[$mailData['reply-to']['field']];
+            }
+        }
+        return $replyTo;
     }
 
     /**
@@ -104,20 +139,24 @@ class SmtpMail extends AbstractAdapter
     private function sendMail($mailData, $mailMessage)
     {
 
-        $replyTo = $this->validFields[$this->config['emailField']];
+        $replyTo = $this->replyTo($mailData);
+
         $transport = $this->createTransporter();
 
         if(!is_null($this->subject)){
             $mailData['subject'] = str_replace('{subject}', $this->subject, $mailData['subject']);
         }
+
         foreach ($mailData['recipients'] as $recipient) {
             $mailer = new \Swift_Mailer($transport);
             $message = (new \Swift_Message())
                 ->setSubject($mailData['subject'])
                 ->setFrom([$mailData['sender'] => $mailData['senderName']])
                 ->setTo([$recipient])
-                ->setBody($mailMessage)
-                ->setReplyTo($replyTo);
+                ->setBody($mailMessage);
+            if(!is_null($replyTo)){
+                $message = $message->setReplyTo($replyTo);
+            }
             $mailer->send($message);
         }
     }

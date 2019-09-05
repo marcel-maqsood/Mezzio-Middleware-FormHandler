@@ -61,6 +61,10 @@ return [
                 ],
                 'adapter' => [
                     'smtpmail' => [
+                        'reply-to' => [
+                            'status' => true, // true/false
+                            'field' => 'mail' // Das Feld im post, welches die Email Adresse der Person benhaltet
+                        ],
                         'recipients' => ['maqsood@designpark.de'],
                         'subject' => 'Anfrage über paulihealthpeople.de',
                         'sender' => 'formular@paulihealthpeople.de',

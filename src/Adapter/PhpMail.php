@@ -78,20 +78,66 @@ class PhpMail extends AbstractAdapter
     }
 
     /**
+     *
+     * Ließt die Email aus, zu der Geantworter werden können soll.
+     *
+     * @param $mailData
+     * @return |null
+     */
+    private function replyTo($mailData){
+
+        $replyTo = null;
+        if(!isset($mailData['reply-to']) || !is_array($mailData['reply-to'])){
+            $this->setError('reply-to not found in adapter!');
+            return null;
+        }
+        if(!isset($mailData['reply-to']['status'])){
+            $this->setError('reply-to status not found!');
+            return null;
+        }
+
+        if($mailData['reply-to']['status']){
+            if(!isset($mailData['reply-to']['field'])){
+                foreach ($this->config['fields'] as $key => $field){
+                    if(isset($field['type']) && $field['type']  == 'email'){
+                        $replyTo = $this->validFields[$key];
+                        break;
+                    }
+                }
+            }else{
+                if(!isset($this->validFields[$mailData['reply-to']['field']]) || is_array($this->validFields[$mailData['reply-to']['field']]) || is_null($this->validFields[$mailData['reply-to']['field']])){
+                    $this->setError('reply-to field not found');
+                    return null;
+                }
+                $replyTo = $this->validFields[$mailData['reply-to']['field']];
+            }
+        }
+        return $replyTo;
+    }
+
+    /**
+     *
+     * Verschickt eine Mail
+     *
      * @param $mailData
      * @param $mailMessage
      */
     private function sendMail($mailData, $mailMessage)
     {
 
-        $replyTo = $this->validFields[$this->config['emailField']];
+        $replyTo = $this->replyTo($mailData);
         if(!is_null($this->subject)){
             $mailData['subject'] = str_replace('{subject}', $this->subject, $mailData['subject']);
         }
         $header = array(
             'From' => $mailData['sender'],
-            'Reply-To' => $replyTo
         );
+        if(!is_null($replyTo)){
+            array_push(
+                $header,
+                ['Reply-To' => $replyTo]
+            );
+        }
         foreach ($mailData['recipients'] as $recipient) {
 
             mail(
