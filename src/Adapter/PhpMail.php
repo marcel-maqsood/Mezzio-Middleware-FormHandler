@@ -48,6 +48,15 @@ class PhpMail extends AbstractAdapter
             return null;
         }
 
+        if(!isset($mailConfig['reply-to']) || !is_array($mailConfig['reply-to'])){
+            $this->setError('reply-to not found in adapter!');
+            return null;
+        }
+        if(!isset($mailConfig['reply-to']['status'])){
+            $this->setError('reply-to status not found!');
+            return null;
+        }
+
         return $config;
     }
 
@@ -70,7 +79,13 @@ class PhpMail extends AbstractAdapter
 
             $mailMessage = $twig->render('test.html', $formData);
 
-            $this->sendMail($mailData, $mailMessage);
+            $replyTo = $this->replyTo($mailData);
+            if(!is_null($replyTo)){
+                $this->setError('replyTo is enabled but found no field.');
+                return null;
+            }
+
+            $this->sendMail($mailData, $mailMessage, $replyTo);
             //hier nichts zurückgeben, damit das program (später) weiß, dass hier alles gut ging und ein 200er gegeben werden kann.
         } catch (\Exception $e) {
             parent::setError('Error occourd in: ' . $e->getFile() . ' on line: ' . $e->getLine() . ' with message: ' . $e->getMessage());
@@ -87,14 +102,6 @@ class PhpMail extends AbstractAdapter
     private function replyTo($mailData){
 
         $replyTo = null;
-        if(!isset($mailData['reply-to']) || !is_array($mailData['reply-to'])){
-            $this->setError('reply-to not found in adapter!');
-            return null;
-        }
-        if(!isset($mailData['reply-to']['status'])){
-            $this->setError('reply-to status not found!');
-            return null;
-        }
 
         if($mailData['reply-to']['status']){
             if(!isset($mailData['reply-to']['field'])){
@@ -127,12 +134,19 @@ class PhpMail extends AbstractAdapter
      * @param $mailData
      * @param $mailMessage
      */
-    private function sendMail($mailData, $mailMessage)
+    private function sendMail($mailData, $mailMessage, $replyTo)
     {
+        if(!is_null($this->eventName)){
+            //$mailData['subject'] = str_replace('{subject}', $this->eventName, $mailData['subject']);
 
-        $replyTo = $this->replyTo($mailData);
-        if(!is_null($this->subject)){
-            $mailData['subject'] = str_replace('{subject}', $this->subject, $mailData['subject']);
+            //TODO: Überlegen, wie man das mit dem Twig-Template macht, wenn man in jedem Feld des Adapers nach variablen prüft, und eine Datei erstellt, muss das über foreach laufen, da sonst
+
+            $loader = new \Twig\Loader\ArrayLoader([
+                'test.html' => $mailData['subject'],
+            ]);
+            $twig = new \Twig\Environment($loader);
+
+            $mailSubject = $twig->render('test.html', ['eventName' => $this->eventName]);
         }
         $header = array(
             'From' => $mailData['sender'],
@@ -145,7 +159,7 @@ class PhpMail extends AbstractAdapter
 
             mail(
                 $recipient,
-                $mailData['subject'],
+                $mailSubject,
                 $mailMessage,
                 $header
             );
