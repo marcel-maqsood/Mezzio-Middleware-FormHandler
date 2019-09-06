@@ -124,7 +124,7 @@ return [
                 'adapter' => [
                     'smtpmail' => [
                         'recipients' => ['maqsood@designpark.de'],
-                        'subject' => 'Anmeldung als Arbeitnehmer über paulihealthpeople.de',
+                        'subject' => 'Anmeldung als Arbeitnehmer über {subject}',
                         'sender' => 'formular@paulihealthpeople.de',
                         'senderName' => 'Kontaktformular',
                         'template' => 'formular::bewerber',
