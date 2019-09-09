@@ -1,5 +1,15 @@
 # Middleware-FormHandler
 
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
+## Installation
+
+Run the following to install this library:
+
+```bash
+$ composer require depa/middleware-formularhandler
+```
+
+## Documentation
 In order to use the FormHandler you have to make sure that zend-problem-details:
 ```php
 $ comsrcposer require zendframework/zend-problem-details
@@ -17,3 +27,13 @@ you can define it inside the Adapter config like this:
 if the field attribute is not defined but the status is true,
 the adapter will check if there is any 'type' => 'email' defined inside the 'fields' definition.
 if not, the reply-to-header is not getting set.
+
+## Credits
+
+This bundle has been developed by [designpark](https://www.designpark.de).
+
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+
