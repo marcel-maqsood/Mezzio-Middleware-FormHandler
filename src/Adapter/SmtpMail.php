@@ -8,6 +8,7 @@ use depa\FormularHandlerMiddleware\AbstractAdapter;
 class SmtpMail extends AbstractAdapter
 {
     use ReplyToTrait;
+
     /**
      * Prüft die übergebene Config (beinhaltet den Adapter) nach den benötigten Werten.
      * @param $config
@@ -77,7 +78,7 @@ class SmtpMail extends AbstractAdapter
     public function handleData()
     {
         $formData = $this->validFields;
-        $mailData = $this->config['adapter']['smtpmail'];
+        $mailData = $this->config['adapter']['smtpmail']; //macht sinn das in abstractadapter auszulagern, und den config eintrag per klassen variable zu setzen (['adapter'][$this->name];)?
 
         try {
             $loader = new \Twig\Loader\ArrayLoader([
@@ -88,7 +89,7 @@ class SmtpMail extends AbstractAdapter
             $mailMessage = $twig->render('test.html', $formData);
 
             $replyTo = $this->replyTo($mailData);
-            if(!$this->errorStatus){
+            if (!$this->errorStatus) {
                 $this->sendMail($mailData, $mailMessage, $replyTo);
             }
 
@@ -106,14 +107,17 @@ class SmtpMail extends AbstractAdapter
 
         $transport = $this->createTransporter();
 
-        if(!is_null($this->eventName)){
-            $loader = new \Twig\Loader\ArrayLoader([
-                'test.html' => $mailData['subject'],
-            ]);
-            $twig = new \Twig\Environment($loader);
+        $loader = new \Twig\Loader\ArrayLoader([
+            'test.html' => $mailData['subject'],
+        ]);
+        $twig = new \Twig\Environment($loader);
 
-            $mailSubject = $twig->render('test.html', ['eventName' => $this->eventName]);
+        $replacements = [];
+        foreach ($this->config['fields'] as $key => $field) {
+
+            $replacements[$key] = $this->validFields[$key];
         }
+        $mailSubject = $twig->render('test.html', $replacements);
 
         foreach ($mailData['recipients'] as $recipient) {
             $mailer = new \Swift_Mailer($transport);
@@ -122,14 +126,15 @@ class SmtpMail extends AbstractAdapter
                 ->setFrom([$mailData['sender'] => $mailData['senderName']])
                 ->setTo([$recipient])
                 ->setBody($mailMessage);
-            if(!is_null($replyTo)){
+            if (!is_null($replyTo)) {
                 $message = $message->setReplyTo($replyTo);
             }
             $mailer->send($message);
         }
     }
 
-    private function createTransporter(){
+    private function createTransporter()
+    {
 
         $transfer_config = $this->config['adapter']['smtpmail']['email_transfer']['config'];
 
@@ -144,7 +149,7 @@ class SmtpMail extends AbstractAdapter
         }
         $port = $transfer_config['port'];
 
-        if($service == "localhost"){
+        if ($service == "localhost") {
             return new \Swift_SmtpTransport($service, $port);
         }
 

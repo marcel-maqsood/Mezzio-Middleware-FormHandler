@@ -35,7 +35,7 @@ trait ReplyToTrait{
             }
         }else{
             if(!isset($this->validFields[$mailData['reply-to']['field']]) || is_array($this->validFields[$mailData['reply-to']['field']]) || is_null($this->validFields[$mailData['reply-to']['field']])){
-                $this->setError('defined email field ' . $mailData['reply-to']['field'] . ' for reply-to couldn\'t be found!');
+                $this->setError('email-field for reply-to not found');
                 return null;
             }
             $replyTo = $this->validFields[$mailData['reply-to']['field']];

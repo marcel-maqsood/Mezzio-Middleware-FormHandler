@@ -9,6 +9,71 @@ class PhpMail extends AbstractAdapter
 {
     use ReplyToTrait;
     /**
+     * @return mixed|void
+     */
+    public function handleData()
+    {
+        $formData = $this->validFields;
+        $mailData = $this->config['adapter']['phpmail'];
+
+        try {
+            $loader = new \Twig\Loader\ArrayLoader([
+                'test.html' => $mailData['template'],
+            ]);
+            $twig = new \Twig\Environment($loader);
+
+            $mailMessage = $twig->render('test.html', $formData);
+
+            $replyTo = $this->replyTo($mailData);
+            if(!$this->errorStatus){
+                $this->sendMail($mailData, $mailMessage, $replyTo);
+            }
+
+        } catch (\Exception $e) {
+            parent::setError('Error occourd in: ' . $e->getFile() . ' on line: ' . $e->getLine() . ' with message: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     *
+     * Verschickt eine Mail
+     *
+     * @param $mailData
+     * @param $mailMessage
+     */
+    private function sendMail($mailData, $mailMessage, $replyTo)
+    {
+        $loader = new \Twig\Loader\ArrayLoader([
+            'test.html' => $mailData['subject'],
+        ]);
+        $twig = new \Twig\Environment($loader);
+
+        $replacements = [];
+        foreach ($this->config['fields'] as $key => $field) {
+
+            $replacements[$key] = $this->validFields[$key];
+        }
+        $mailSubject = $twig->render('test.html', $replacements);
+
+        $header = array(
+            'From' => $mailData['sender'],
+        );
+        if(!is_null($replyTo)){
+            $header['Reply-to'] = $replyTo;
+        }
+
+        foreach ($mailData['recipients'] as $recipient) {
+
+            mail(
+                $recipient,
+                $mailSubject,
+                $mailMessage,
+                $header
+            );
+        }
+    }
+
+    /**
      * Prüft die übergebene Config (beinhaltet den Adapter) nach den benötigten Werten.
      * @param $config
      * @return |null
@@ -69,69 +134,5 @@ class PhpMail extends AbstractAdapter
         }
 
         return $config;
-    }
-
-    /**
-     * @return mixed|void
-     */
-    public function handleData()
-    {
-        $formData = $this->validFields;
-        $mailData = $this->config['adapter']['phpmail'];
-
-        try {
-            $loader = new \Twig\Loader\ArrayLoader([
-                'test.html' => $mailData['template'],
-            ]);
-            $twig = new \Twig\Environment($loader);
-
-            $mailMessage = $twig->render('test.html', $formData);
-
-            $replyTo = $this->replyTo($mailData);
-            if($this->errorStatus){
-                $this->sendMail($mailData, $mailMessage, $replyTo);
-            }
-
-        } catch (\Exception $e) {
-            parent::setError('Error occourd in: ' . $e->getFile() . ' on line: ' . $e->getLine() . ' with message: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     *
-     * Verschickt eine Mail
-     *
-     * @param $mailData
-     * @param $mailMessage
-     */
-    private function sendMail($mailData, $mailMessage, $replyTo)
-    {
-        if(!is_null($this->eventName)){
-
-            //TODO: Überlegen, wie man das mit dem Twig-Template macht, wenn man in jedem Feld des Adapers nach variablen prüft, und eine Datei erstellt, muss das über foreach laufen, da sonst
-
-            $loader = new \Twig\Loader\ArrayLoader([
-                'test.html' => $mailData['subject'],
-            ]);
-            $twig = new \Twig\Environment($loader);
-
-            $mailSubject = $twig->render('test.html', ['eventName' => $this->eventName]);
-        }
-        $header = array(
-            'From' => $mailData['sender'],
-        );
-        if(!is_null($replyTo)){
-            $header['Reply-to'] = $replyTo;
-        }
-
-        foreach ($mailData['recipients'] as $recipient) {
-
-            mail(
-                $recipient,
-                $mailSubject,
-                $mailMessage,
-                $header
-            );
-        }
     }
 }

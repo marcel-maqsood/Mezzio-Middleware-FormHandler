@@ -16,17 +16,14 @@ abstract class AbstractAdapter implements AdapterInterface
 
     protected $validFields;
 
-    protected $eventName;
 
-    public function __construct(array $config = [], array $validFields = [], $eventName = NULL)
+    public function __construct(array $config = [], array $validFields = [])
     {
         //es gibt in der config 2 bereiche. bereich a definiert die formularelemente, bereich b definiert den/die adapter
         $this->config = $config;
         $this->validFields = $validFields;
         //Subject ist ein extra Feld im Formular, das nicht zwingend sein muss, falls es aber definiert wurde,
         //kann der Inhalt in der Betreffzeile der Form-Config abgerufen werden.
-        $this->eventName = $eventName;
-
 
         $this->checkConfig($this->config);
         if (!$this->errorStatus){
