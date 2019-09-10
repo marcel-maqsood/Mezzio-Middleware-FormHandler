@@ -5,9 +5,14 @@ namespace depa\FormularHandlerMiddleware\Adapter;
 
 use depa\FormularHandlerMiddleware\AbstractAdapter;
 
+/**
+ * Class PhpMail
+ * @package depa\FormularHandlerMiddleware\Adapter
+ */
 class PhpMail extends AbstractAdapter
 {
     use ReplyToTrait;
+
     /**
      * @return mixed|void
      */
@@ -18,14 +23,14 @@ class PhpMail extends AbstractAdapter
 
         try {
             $loader = new \Twig\Loader\ArrayLoader([
-                'test.html' => $mailData['template'],
+                'mail.html' => $mailData['template'],
             ]);
             $twig = new \Twig\Environment($loader);
 
-            $mailMessage = $twig->render('test.html', $formData);
+            $mailMessage = $twig->render('mail.html', $formData);
 
             $replyTo = $this->replyTo($mailData);
-            if(!$this->errorStatus){
+            if (!$this->errorStatus) {
                 $this->sendMail($mailData, $mailMessage, $replyTo);
             }
 
@@ -44,7 +49,7 @@ class PhpMail extends AbstractAdapter
     private function sendMail($mailData, $mailMessage, $replyTo)
     {
         $loader = new \Twig\Loader\ArrayLoader([
-            'test.html' => $mailData['subject'],
+            'mail.html' => $mailData['subject'],
         ]);
         $twig = new \Twig\Environment($loader);
 
@@ -53,12 +58,12 @@ class PhpMail extends AbstractAdapter
             $replacements[$key] = $value;
         }
 
-        $mailSubject = $twig->render('test.html', $replacements);
+        $mailSubject = $twig->render('mail.html', $replacements);
 
         $header = array(
             'From' => $mailData['sender'],
         );
-        if(!is_null($replyTo)){
+        if (!is_null($replyTo)) {
             $header['Reply-to'] = $replyTo;
         }
 
