@@ -4,6 +4,8 @@
 namespace depa\FormularHandlerMiddleware\Adapter;
 
 use depa\FormularHandlerMiddleware\AbstractAdapter;
+use Twig\Environment;
+use Twig\Loader\ArrayLoader;
 
 /**
  * Class PhpMail
@@ -22,10 +24,10 @@ class PhpMail extends AbstractAdapter
         $mailData = $this->config['adapter']['phpmail'];
 
         try {
-            $loader = new \Twig\Loader\ArrayLoader([
+            $loader = new ArrayLoader([
                 'mail.html' => $mailData['template'],
             ]);
-            $twig = new \Twig\Environment($loader);
+            $twig = new Environment($loader);
 
             $mailMessage = $twig->render('mail.html', $formData);
 
@@ -48,10 +50,10 @@ class PhpMail extends AbstractAdapter
      */
     private function sendMail($mailData, $mailMessage, $replyTo)
     {
-        $loader = new \Twig\Loader\ArrayLoader([
+        $loader = new ArrayLoader([
             'mail.html' => $mailData['subject'],
         ]);
-        $twig = new \Twig\Environment($loader);
+        $twig = new Environment($loader);
 
         $replacements = [];
         foreach ($this->validFields as $key => $value) {

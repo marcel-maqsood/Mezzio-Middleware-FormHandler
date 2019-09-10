@@ -4,6 +4,8 @@
 namespace depa\FormularHandlerMiddleware\Adapter;
 
 use depa\FormularHandlerMiddleware\AbstractAdapter;
+use Twig\Environment;
+use Twig\Loader\ArrayLoader;
 
 class SmtpMail extends AbstractAdapter
 {
@@ -81,10 +83,10 @@ class SmtpMail extends AbstractAdapter
         $mailData = $this->config['adapter']['smtpmail']; //macht sinn das in abstractadapter auszulagern, und den config eintrag per klassen variable zu setzen (['adapter'][$this->name];)?
 
         try {
-            $loader = new \Twig\Loader\ArrayLoader([
+            $loader = new ArrayLoader([
                 'mail.html' => $mailData['template'],
             ]);
-            $twig = new \Twig\Environment($loader);
+            $twig = new Environment($loader);
 
             $mailMessage = $twig->render('mail.html', $formData);
 
@@ -107,10 +109,10 @@ class SmtpMail extends AbstractAdapter
 
         $transport = $this->createTransporter();
 
-        $loader = new \Twig\Loader\ArrayLoader([
+        $loader = new ArrayLoader([
             'mail.html' => $mailData['subject'],
         ]);
-        $twig = new \Twig\Environment($loader);
+        $twig = new Environment($loader);
 
         $replacements = [];
         foreach ($this->validFields as $key => $value) {
