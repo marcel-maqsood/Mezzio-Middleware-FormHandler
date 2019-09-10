@@ -18,7 +18,7 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
     const STATUS_MISSING_VALUE = 'MISSING_VALUE';
 
     /**
-     * @var Array
+     * @var array
      */
     private $formDefinition;
 
