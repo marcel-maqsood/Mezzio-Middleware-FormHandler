@@ -7,10 +7,11 @@ use depa\FormularHandlerMiddleware\AbstractAdapter;
 
 class PhpMail extends AbstractAdapter
 {
-
+    use \depa\FormularHandlerMiddleware\MailTrait;
     /**
+     * Prüft die übergebene Config (beinhaltet den Adapter) nach den benötigten Werten.
      * @param $config
-     * @return array
+     * @return |null
      */
     protected function checkConfig($config)
     {
@@ -19,10 +20,29 @@ class PhpMail extends AbstractAdapter
             return null;
         }
         if (!isset($config['adapter']['phpmail']) || is_null($config['adapter']['phpmail']) || !is_array($config['adapter']['phpmail'])) {
-            parent::setError('There is no mail-config idnside the adapter!');
+            parent::setError('There is no mail-config inside the adapter!');
             return null;
         }
         $mailConfig = $config['adapter']['phpmail'];
+
+        if (!isset($mailConfig['email_transfer']) || is_null($mailConfig['email_transfer']) || !is_array($mailConfig['email_transfer'])) {
+            //Fehler: keine gültige config für das versenden von mails
+            parent::setError('There is no email_transfer defined inside the mail-adapter config!');
+            return null;
+        }
+        $mailTransfer = $mailConfig['email_transfer'];
+
+        if (!isset($mailTransfer['method']) || is_null($mailTransfer['method']) || is_array($mailTransfer['method'])) {
+            //Fehler: keine gültige definition für Transfer-Methode
+            parent::setError('There is no method defined inside the email_transfer config!');
+            return null;
+        }
+
+        if (!isset($mailTransfer['config']) || is_null($mailTransfer['config']) || !is_array($mailTransfer['config'])) {
+            //Fehler: ungültige Config für Transfer-Methode
+            parent::setError('There is no mail-config defined inside the email_transfer config!');
+            return null;
+        }
 
         if (!isset($mailConfig['recipients']) || is_null($mailConfig['recipients']) || !is_array($mailConfig['recipients'])) {
             //Fehler: ungültige definition von recipients
@@ -48,20 +68,11 @@ class PhpMail extends AbstractAdapter
             return null;
         }
 
-        if(!isset($mailConfig['reply-to']) || !is_array($mailConfig['reply-to'])){
-            $this->setError('reply-to not found in adapter!');
-            return null;
-        }
-        if(!isset($mailConfig['reply-to']['status'])){
-            $this->setError('reply-to status not found!');
-            return null;
-        }
-
         return $config;
     }
 
     /**
-     * Versendet eine Email an die in der Array-Config hinterlegten recipient(s), basierend auf dem dort definierten Template.
+     * @return mixed|void
      */
     public function handleData()
     {
@@ -80,51 +91,12 @@ class PhpMail extends AbstractAdapter
             $mailMessage = $twig->render('test.html', $formData);
 
             $replyTo = $this->replyTo($mailData);
-            if(!is_null($replyTo)){
-                $this->setError('replyTo is enabled but found no field.');
-                return null;
-            }
 
             $this->sendMail($mailData, $mailMessage, $replyTo);
             //hier nichts zurückgeben, damit das program (später) weiß, dass hier alles gut ging und ein 200er gegeben werden kann.
         } catch (\Exception $e) {
             parent::setError('Error occourd in: ' . $e->getFile() . ' on line: ' . $e->getLine() . ' with message: ' . $e->getMessage());
         }
-    }
-
-    /**
-     *
-     * Ließt die Email aus, zu der Geantworter werden können soll.
-     *
-     * @param $mailData
-     * @return |null
-     */
-    private function replyTo($mailData){
-
-        $replyTo = null;
-
-        if($mailData['reply-to']['status']){
-            if(!isset($mailData['reply-to']['field'])){
-                foreach ($this->config['fields'] as $key => $field){
-                    if(isset($field['type']) && $field['type']  == 'email'){
-                        $replyTo = $this->validFields[$key];
-                        break;
-                    }
-                }
-            }else{
-                if(!isset($this->validFields[$mailData['reply-to']['field']]) || is_array($this->validFields[$mailData['reply-to']['field']]) || is_null($this->validFields[$mailData['reply-to']['field']])){
-                    $this->setError('reply-to field not found');
-                    return null;
-                }
-                $replyTo = $this->validFields[$mailData['reply-to']['field']];
-            }
-        }
-
-        if(is_null($replyTo)){
-            $this->setError('no reply-to email found.');
-            return null;
-        }
-        return $replyTo;
     }
 
     /**

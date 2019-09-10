@@ -7,7 +7,7 @@ use depa\FormularHandlerMiddleware\AbstractAdapter;
 
 class SmtpMail extends AbstractAdapter
 {
-
+    use \depa\FormularHandlerMiddleware\MailTrait;
     /**
      * Prüft die übergebene Config (beinhaltet den Adapter) nach den benötigten Werten.
      * @param $config
@@ -91,54 +91,12 @@ class SmtpMail extends AbstractAdapter
             $mailMessage = $twig->render('test.html', $formData);
 
             $replyTo = $this->replyTo($mailData);
-            if(is_null($replyTo)){
-                return null;
-            }
 
             $this->sendMail($mailData, $mailMessage, $replyTo);
             //hier nichts zurückgeben, damit das program (später) weiß, dass hier alles gut ging und ein 200er gegeben werden kann.
         } catch (\Exception $e) {
             parent::setError('Error occourd in: ' . $e->getFile() . ' on line: ' . $e->getLine() . ' with message: ' . $e->getMessage());
         }
-    }
-
-    /**
-     * @param $mailData
-     * @return |null
-     */
-    private function replyTo($mailData){
-
-        $replyTo = null;
-        if(!isset($mailData['reply-to']) || !is_array($mailData['reply-to'])){
-            $this->setError('reply-to not found in adapter!');
-            return null;
-        }
-        if(!isset($mailData['reply-to']['status'])){
-            $this->setError('reply-to status not found!');
-            return null;
-        }
-
-        if($mailData['reply-to']['status']){
-            if(!isset($mailData['reply-to']['field'])){
-                foreach ($this->config['fields'] as $key => $field){
-                    if(isset($field['type']) && $field['type']  == 'email'){
-                        $replyTo = $this->validFields[$key];
-                        break;
-                    }
-                }
-            }else{
-                if(!isset($this->validFields[$mailData['reply-to']['field']]) || is_array($this->validFields[$mailData['reply-to']['field']]) || is_null($this->validFields[$mailData['reply-to']['field']])){
-                    $this->setError('reply-to field not found');
-                    return null;
-                }
-                $replyTo = $this->validFields[$mailData['reply-to']['field']];
-            }
-        }
-        if(is_null($replyTo)){
-            $this->setError('no reply-to email found.');
-            return null;
-        }
-        return $replyTo;
     }
 
     /**
