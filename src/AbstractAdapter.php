@@ -4,8 +4,6 @@
 namespace depa\FormularHandlerMiddleware;
 
 
-use Psr\Http\Message\ResponseInterface;
-
 abstract class AbstractAdapter implements AdapterInterface
 {
     protected $errorStatus = false;
