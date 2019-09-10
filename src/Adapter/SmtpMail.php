@@ -82,11 +82,11 @@ class SmtpMail extends AbstractAdapter
 
         try {
             $loader = new \Twig\Loader\ArrayLoader([
-                'test.html' => $mailData['template'],
+                'mail.html' => $mailData['template'],
             ]);
             $twig = new \Twig\Environment($loader);
 
-            $mailMessage = $twig->render('test.html', $formData);
+            $mailMessage = $twig->render('mail.html', $formData);
 
             $replyTo = $this->replyTo($mailData);
             if (!$this->errorStatus) {
@@ -108,7 +108,7 @@ class SmtpMail extends AbstractAdapter
         $transport = $this->createTransporter();
 
         $loader = new \Twig\Loader\ArrayLoader([
-            'test.html' => $mailData['subject'],
+            'mail.html' => $mailData['subject'],
         ]);
         $twig = new \Twig\Environment($loader);
 
@@ -117,7 +117,7 @@ class SmtpMail extends AbstractAdapter
             $replacements[$key] = $value; 
         }
 
-        $mailSubject = $twig->render('test.html', $replacements);
+        $mailSubject = $twig->render('mail.html', $replacements);
 
         foreach ($mailData['recipients'] as $recipient) {
             $mailer = new \Swift_Mailer($transport);
@@ -133,6 +133,9 @@ class SmtpMail extends AbstractAdapter
         }
     }
 
+    /**
+     * @return \Swift_SmtpTransport
+     */
     private function createTransporter()
     {
 

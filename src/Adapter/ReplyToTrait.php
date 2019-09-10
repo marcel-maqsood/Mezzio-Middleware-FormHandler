@@ -1,12 +1,15 @@
 <?php
 
 namespace depa\FormularHandlerMiddleware\Adapter;
-
+/**
+ * Trait ReplyToTrait
+ * @package depa\FormularHandlerMiddleware\Adapter
+ */
 trait ReplyToTrait{
 
     /**
-     * @param $mailData
-     * @return |null
+     * @param $mailData array
+     * @return string|null
      */
     public function replyTo($mailData){
         $replyTo = null;
