@@ -49,10 +49,10 @@ class PhpMail extends AbstractAdapter
         $twig = new \Twig\Environment($loader);
 
         $replacements = [];
-        foreach ($this->config['fields'] as $key => $field) {
-
-            $replacements[$key] = $this->validFields[$key];
+        foreach ($this->validFields as $key => $value) {
+            $replacements[$key] = $value;
         }
+
         $mailSubject = $twig->render('test.html', $replacements);
 
         $header = array(
