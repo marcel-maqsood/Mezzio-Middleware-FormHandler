@@ -9,6 +9,10 @@ use depa\FormularHandlerMiddleware\Adapter\PhpMail;
 use depa\FormularHandlerMiddleware\Adapter\PdoDatabase;
 use depa\FormularHandlerMiddleware\Adapter\Wufoo;
 
+/**
+ * Class Formular
+ * @package depa\FormularHandlerMiddleware
+ */
 class Formular
 {
     /**
