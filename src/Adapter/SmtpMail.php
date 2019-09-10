@@ -7,7 +7,7 @@ use depa\FormularHandlerMiddleware\AbstractAdapter;
 
 class SmtpMail extends AbstractAdapter
 {
-    use \depa\FormularHandlerMiddleware\MailTrait;
+    use ReplyToTrait;
     /**
      * Prüft die übergebene Config (beinhaltet den Adapter) nach den benötigten Werten.
      * @param $config
@@ -79,10 +79,7 @@ class SmtpMail extends AbstractAdapter
         $formData = $this->validFields;
         $mailData = $this->config['adapter']['smtpmail'];
 
-        //Verwenden eines try-catch blocks, um auch bei fehlern mit problem-details zu arbeiten.
         try {
-            //Message in Config-Array des Formulars aufbauen - dabei die field-names mit {} umklammern, um es für das System erkennbar zu machen?
-            //$mailMessage = $this->renderTemplate($formData, $mailData['template'], $mailData);
             $loader = new \Twig\Loader\ArrayLoader([
                 'test.html' => $mailData['template'],
             ]);
@@ -91,9 +88,10 @@ class SmtpMail extends AbstractAdapter
             $mailMessage = $twig->render('test.html', $formData);
 
             $replyTo = $this->replyTo($mailData);
+            if(!$this->errorStatus){
+                $this->sendMail($mailData, $mailMessage, $replyTo);
+            }
 
-            $this->sendMail($mailData, $mailMessage, $replyTo);
-            //hier nichts zurückgeben, damit das program (später) weiß, dass hier alles gut ging und ein 200er gegeben werden kann.
         } catch (\Exception $e) {
             parent::setError('Error occourd in: ' . $e->getFile() . ' on line: ' . $e->getLine() . ' with message: ' . $e->getMessage());
         }

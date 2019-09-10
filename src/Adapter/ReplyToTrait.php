@@ -1,18 +1,21 @@
 <?php
 
-namespace depa\FormularHandlerMiddleware;
+namespace depa\FormularHandlerMiddleware\Adapter;
 
-trait MailTrait{
+trait ReplyToTrait{
 
     /**
      * @param $mailData
      * @return |null
      */
     public function replyTo($mailData){
-
         $replyTo = null;
-        if(!isset($mailData['reply-to']) || !is_array($mailData['reply-to'])){
+        if(!isset($mailData['reply-to'])){
             return $replyTo;
+        }
+        if(!is_array($mailData['reply-to'])){
+            $this->setError('reply-to must be an array in config!');
+            return null;
         }
         if(!isset($mailData['reply-to']['status'])){
             $this->setError('reply-to status not found!');
@@ -32,13 +35,13 @@ trait MailTrait{
             }
         }else{
             if(!isset($this->validFields[$mailData['reply-to']['field']]) || is_array($this->validFields[$mailData['reply-to']['field']]) || is_null($this->validFields[$mailData['reply-to']['field']])){
-                $this->setError('reply-to field not found');
+                $this->setError('email-field for reply-to not found');
                 return null;
             }
             $replyTo = $this->validFields[$mailData['reply-to']['field']];
         }
         if(is_null($replyTo)){
-            $this->setError('no reply-to email found.');
+            $this->setError('reply-to was enable but couldn\'t find a field with type email.');
             return null;
         }
         return $replyTo;
