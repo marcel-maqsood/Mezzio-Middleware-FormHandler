@@ -6,6 +6,10 @@ namespace depa\FormularHandlerMiddleware\Adapter;
 use PDO;
 use Psr\Container\ContainerInterface;
 
+/**
+ * Class PdoDatabaseFactory
+ * @package depa\FormularHandlerMiddleware\Adapter
+ */
 class PdoDatabaseFactory
 {
     /**
