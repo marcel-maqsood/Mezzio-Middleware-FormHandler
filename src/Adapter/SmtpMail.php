@@ -10,12 +10,20 @@ use Swift_SmtpTransport;
 use Twig;
 use Exception;
 
+/**
+ * Sendet Mail über Swift_SmtpTransport.
+ *
+ * Class SmtpMail
+ * @package depa\FormularHandlerMiddleware\Adapter
+ */
 class SmtpMail extends AbstractAdapter
 {
+
     use ReplyToTrait;
 
     /**
-     * Prüft die übergebene Config (beinhaltet den Adapter) nach den benötigten Werten.
+     * Überprüft das übergebene Config-Array
+     *
      * @param $config
      * @return array |null
      */
@@ -78,7 +86,7 @@ class SmtpMail extends AbstractAdapter
     }
 
     /**
-     * @return mixed|void
+     * Rendert und versendet die EMail
      */
     public function handleData()
     {
@@ -87,11 +95,11 @@ class SmtpMail extends AbstractAdapter
 
         try {
             $loader = new Twig\Loader\ArrayLoader([
-                'test.html' => $mailData['template'],
+                'mailMessage.html' => $mailData['template'],
             ]);
             $twig = new Twig\Environment($loader);
 
-            $mailMessage = $twig->render('test.html', $formData);
+            $mailMessage = $twig->render('mailMessage.html', $formData);
 
             $replyTo = $this->replyTo($mailData);
             if (!$this->errorStatus) {
@@ -104,6 +112,8 @@ class SmtpMail extends AbstractAdapter
     }
 
     /**
+     * Sendet eine EMail.
+     *
      * @param $mailData
      * @param $mailMessage
      * @param $replyTo
@@ -117,7 +127,7 @@ class SmtpMail extends AbstractAdapter
         $transport = $this->createTransporter();
 
         $loader = new Twig\Loader\ArrayLoader([
-            'test.html' => $mailData['subject'],
+            'mailSubject.html' => $mailData['subject'],
         ]);
         $twig = new Twig\Environment($loader);
 
@@ -126,10 +136,10 @@ class SmtpMail extends AbstractAdapter
             $replacements[$key] = $value; 
         }
 
-        $mailSubject = $twig->render('test.html', $replacements);
+        $mailSubject = $twig->render('mailSubject.html', $replacements);
+        $mailer = new Swift_Mailer($transport);
 
         foreach ($mailData['recipients'] as $recipient) {
-            $mailer = new Swift_Mailer($transport);
             $message = (new Swift_Message())
                 ->setSubject($mailSubject)
                 ->setFrom([$mailData['sender'] => $mailData['senderName']])
@@ -142,6 +152,11 @@ class SmtpMail extends AbstractAdapter
         }
     }
 
+    /**
+     * Erstellt ein Swift_SmtpTransport Objekt, über das Mails versendet werden.
+     *
+     * @return Swift_SmtpTransport
+     */
     private function createTransporter()
     {
 

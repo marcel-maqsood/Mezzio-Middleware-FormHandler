@@ -7,11 +7,18 @@ use depa\FormularHandlerMiddleware\AbstractAdapter;
 use Twig;
 use Exception;
 
+/**
+ * Versendet Mail über PHP mail().
+ *
+ * Class PhpMail
+ * @package depa\FormularHandlerMiddleware\Adapter
+ */
 class PhpMail extends AbstractAdapter
 {
     use ReplyToTrait;
+
     /**
-     * @return mixed|void
+     * Rendert und versendet die EMail
      */
     public function handleData()
     {
@@ -20,11 +27,11 @@ class PhpMail extends AbstractAdapter
 
         try {
             $loader = new Twig\Loader\ArrayLoader([
-                'mail.html' => $mailData['template'],
+                'mailMessage.html' => $mailData['template'],
             ]);
             $twig = new Twig\Environment($loader);
 
-            $mailMessage = $twig->render('mail.html', $formData);
+            $mailMessage = $twig->render('mailMessage.html', $formData);
 
             $replyTo = $this->replyTo($mailData);
             if(!$this->errorStatus){
@@ -37,8 +44,7 @@ class PhpMail extends AbstractAdapter
     }
 
     /**
-     *
-     * Verschickt eine Mail
+     * Sendet eine EMail.
      *
      * @param $mailData
      * @param $mailMessage
@@ -50,7 +56,7 @@ class PhpMail extends AbstractAdapter
     private function sendMail($mailData, $mailMessage, $replyTo)
     {
         $loader = new Twig\Loader\ArrayLoader([
-            'mail.html' => $mailData['subject'],
+            'mailSubject.html' => $mailData['subject'],
         ]);
         $twig = new Twig\Environment($loader);
 
@@ -59,7 +65,7 @@ class PhpMail extends AbstractAdapter
             $replacements[$key] = $value;
         }
 
-        $mailSubject = $twig->render('mail.html', $replacements);
+        $mailSubject = $twig->render('mailSubject.html', $replacements);
 
         $header = array(
             'From' => $mailData['sender'],
@@ -80,7 +86,8 @@ class PhpMail extends AbstractAdapter
     }
 
     /**
-     * Prüft die übergebene Config (beinhaltet den Adapter) nach den benötigten Werten.
+     * Überprüft das übergebene Config-Array
+     *
      * @param $config
      * @return array |null
      */
