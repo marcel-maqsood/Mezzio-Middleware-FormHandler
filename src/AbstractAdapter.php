@@ -3,18 +3,37 @@
 
 namespace depa\FormularHandlerMiddleware;
 
-
+/**
+ * Class AbstractAdapter
+ * @package depa\FormularHandlerMiddleware
+ */
 abstract class AbstractAdapter implements AdapterInterface
 {
+    /**
+     * @var bool
+     */
     protected $errorStatus = false;
 
+    /**
+     * @var string
+     */
     protected $errorDescription = '';
 
+    /**
+     * @var array
+     */
     protected $config;
 
+    /**
+     * @var array
+     */
     protected $validFields;
 
-
+    /**
+     * AbstractAdapter constructor.
+     * @param array $config
+     * @param array $validFields
+     */
     public function __construct(array $config = [], array $validFields = [])
     {
         //es gibt in der config 2 bereiche. bereich a definiert die formularelemente, bereich b definiert den/die adapter
@@ -25,7 +44,7 @@ abstract class AbstractAdapter implements AdapterInterface
 
         $this->checkConfig($this->config);
         if (!$this->errorStatus){
-            return $this->handleData();
+            $this->handleData();
         }
     }
 
@@ -40,7 +59,7 @@ abstract class AbstractAdapter implements AdapterInterface
     }
 
     /**
-     * Gibt ein Boolean zurück, der aussagt ob es ein Fehler gab oder nicht.
+     * Gibt den Status des Objekts zurück
      * @return bool
      */
     public function getErrorStatus()
@@ -49,7 +68,7 @@ abstract class AbstractAdapter implements AdapterInterface
     }
 
     /**
-     *
+     * Gibt die Fehlerbeschreibung des Objekts zurück.
      * @return string
      */
     public function getErrorDescription()
@@ -57,7 +76,15 @@ abstract class AbstractAdapter implements AdapterInterface
         return $this->errorDescription;
     }
 
+    /**
+     * Überprüft das übergebene Config-Array.
+     * @param $config
+     * @return mixed
+     */
     abstract protected function checkConfig($config);
 
+    /**
+     * Verarbeitet die Daten des Adapters.
+     */
     abstract public function handleData();
 }
