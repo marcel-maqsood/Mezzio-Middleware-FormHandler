@@ -4,17 +4,10 @@
 namespace depa\FormularHandlerMiddleware\Adapter;
 
 use depa\FormularHandlerMiddleware\AbstractAdapter;
-use Twig\Environment;
-use Twig\Loader\ArrayLoader;
 
-/**
- * Class PhpMail
- * @package depa\FormularHandlerMiddleware\Adapter
- */
 class PhpMail extends AbstractAdapter
 {
     use ReplyToTrait;
-
     /**
      * @return mixed|void
      */
@@ -24,15 +17,15 @@ class PhpMail extends AbstractAdapter
         $mailData = $this->config['adapter']['phpmail'];
 
         try {
-            $loader = new ArrayLoader([
-                'mail.html' => $mailData['template'],
+            $loader = new \Twig\Loader\ArrayLoader([
+                'test.html' => $mailData['template'],
             ]);
-            $twig = new Environment($loader);
+            $twig = new \Twig\Environment($loader);
 
-            $mailMessage = $twig->render('mail.html', $formData);
+            $mailMessage = $twig->render('test.html', $formData);
 
             $replyTo = $this->replyTo($mailData);
-            if (!$this->errorStatus) {
+            if(!$this->errorStatus){
                 $this->sendMail($mailData, $mailMessage, $replyTo);
             }
 
@@ -50,22 +43,22 @@ class PhpMail extends AbstractAdapter
      */
     private function sendMail($mailData, $mailMessage, $replyTo)
     {
-        $loader = new ArrayLoader([
-            'mail.html' => $mailData['subject'],
+        $loader = new \Twig\Loader\ArrayLoader([
+            'test.html' => $mailData['subject'],
         ]);
-        $twig = new Environment($loader);
+        $twig = new \Twig\Environment($loader);
 
         $replacements = [];
         foreach ($this->validFields as $key => $value) {
             $replacements[$key] = $value;
         }
 
-        $mailSubject = $twig->render('mail.html', $replacements);
+        $mailSubject = $twig->render('test.html', $replacements);
 
         $header = array(
             'From' => $mailData['sender'],
         );
-        if (!is_null($replyTo)) {
+        if(!is_null($replyTo)){
             $header['Reply-to'] = $replyTo;
         }
 
@@ -97,46 +90,27 @@ class PhpMail extends AbstractAdapter
         }
         $mailConfig = $config['adapter']['phpmail'];
 
-        if (!isset($mailConfig['email_transfer']) || is_null($mailConfig['email_transfer']) || !is_array($mailConfig['email_transfer'])) {
-            //Fehler: keine gültige config für das versenden von mails
-            parent::setError('There is no email_transfer defined inside the mail-adapter config!');
-            return null;
-        }
-        $mailTransfer = $mailConfig['email_transfer'];
-
-        if (!isset($mailTransfer['method']) || is_null($mailTransfer['method']) || is_array($mailTransfer['method'])) {
-            //Fehler: keine gültige definition für Transfer-Methode
-            parent::setError('There is no method defined inside the email_transfer config!');
-            return null;
-        }
-
-        if (!isset($mailTransfer['config']) || is_null($mailTransfer['config']) || !is_array($mailTransfer['config'])) {
-            //Fehler: ungültige Config für Transfer-Methode
-            parent::setError('There is no mail-config defined inside the email_transfer config!');
-            return null;
-        }
-
         if (!isset($mailConfig['recipients']) || is_null($mailConfig['recipients']) || !is_array($mailConfig['recipients'])) {
             //Fehler: ungültige definition von recipients
-            parent::setError('recipients-arraay is not properly defined in email_transfer-config!');
+            parent::setError('recipients-arraay is not properly defined in adapter!');
             return null;
         }
 
         if (!isset($mailConfig['subject']) || is_null($mailConfig['subject']) || !is_string($mailConfig['subject'])) {
             //Fehler: ungültige definition von Subject
-            parent::setError('There is no subject defined inside the transfer_config!');
+            parent::setError('There is no subject defined inside the adapter!');
             return null;
         }
 
         if (!isset($mailConfig['sender']) || is_null($mailConfig['sender']) || !is_string($mailConfig['sender'])) {
             //Fehler: ungültige definition von Subject
-            parent::setError('There is no sender defined inside the transfer_config!');
+            parent::setError('There is no sender defined inside the adapter!');
             return null;
         }
 
         if (!isset($mailConfig['senderName']) || is_null($mailConfig['senderName']) || !is_string($mailConfig['senderName'])) {
             //Fehler: ungültige definition von Subject
-            parent::setError('There is no senderName defined inside the transfer_config!');
+            parent::setError('There is no senderName defined inside the adapter!');
             return null;
         }
 

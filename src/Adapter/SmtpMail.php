@@ -4,8 +4,6 @@
 namespace depa\FormularHandlerMiddleware\Adapter;
 
 use depa\FormularHandlerMiddleware\AbstractAdapter;
-use Twig\Environment;
-use Twig\Loader\ArrayLoader;
 
 class SmtpMail extends AbstractAdapter
 {
@@ -49,25 +47,25 @@ class SmtpMail extends AbstractAdapter
 
         if (!isset($mailConfig['recipients']) || is_null($mailConfig['recipients']) || !is_array($mailConfig['recipients'])) {
             //Fehler: ungültige definition von recipients
-            parent::setError('recipients-arraay is not properly defined in email_transfer-config!');
+            parent::setError('recipients-arraay is not properly defined in adapter!');
             return null;
         }
 
         if (!isset($mailConfig['subject']) || is_null($mailConfig['subject']) || !is_string($mailConfig['subject'])) {
             //Fehler: ungültige definition von Subject
-            parent::setError('There is no subject defined inside the transfer_config!');
+            parent::setError('There is no subject defined inside the adapter!');
             return null;
         }
 
         if (!isset($mailConfig['sender']) || is_null($mailConfig['sender']) || !is_string($mailConfig['sender'])) {
             //Fehler: ungültige definition von Subject
-            parent::setError('There is no sender defined inside the transfer_config!');
+            parent::setError('There is no sender defined inside the adapter!');
             return null;
         }
 
         if (!isset($mailConfig['senderName']) || is_null($mailConfig['senderName']) || !is_string($mailConfig['senderName'])) {
             //Fehler: ungültige definition von Subject
-            parent::setError('There is no senderName defined inside the transfer_config!');
+            parent::setError('There is no senderName defined inside the adapter!');
             return null;
         }
 
@@ -83,12 +81,12 @@ class SmtpMail extends AbstractAdapter
         $mailData = $this->config['adapter']['smtpmail']; //macht sinn das in abstractadapter auszulagern, und den config eintrag per klassen variable zu setzen (['adapter'][$this->name];)?
 
         try {
-            $loader = new ArrayLoader([
-                'mail.html' => $mailData['template'],
+            $loader = new \Twig\Loader\ArrayLoader([
+                'test.html' => $mailData['template'],
             ]);
-            $twig = new Environment($loader);
+            $twig = new \Twig\Environment($loader);
 
-            $mailMessage = $twig->render('mail.html', $formData);
+            $mailMessage = $twig->render('test.html', $formData);
 
             $replyTo = $this->replyTo($mailData);
             if (!$this->errorStatus) {
@@ -109,17 +107,17 @@ class SmtpMail extends AbstractAdapter
 
         $transport = $this->createTransporter();
 
-        $loader = new ArrayLoader([
-            'mail.html' => $mailData['subject'],
+        $loader = new \Twig\Loader\ArrayLoader([
+            'test.html' => $mailData['subject'],
         ]);
-        $twig = new Environment($loader);
+        $twig = new \Twig\Environment($loader);
 
         $replacements = [];
         foreach ($this->validFields as $key => $value) {
             $replacements[$key] = $value; 
         }
 
-        $mailSubject = $twig->render('mail.html', $replacements);
+        $mailSubject = $twig->render('test.html', $replacements);
 
         foreach ($mailData['recipients'] as $recipient) {
             $mailer = new \Swift_Mailer($transport);
@@ -135,9 +133,6 @@ class SmtpMail extends AbstractAdapter
         }
     }
 
-    /**
-     * @return \Swift_SmtpTransport
-     */
     private function createTransporter()
     {
 
