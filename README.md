@@ -1,6 +1,7 @@
 # Middleware-FormHandler
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
+[![StyleCI](https://styleci.io/repos/201788719/shield?branch=master)](https://github.styleci.io/repos/201788719)
 ## Installation
 
 Run the following to install this library:
