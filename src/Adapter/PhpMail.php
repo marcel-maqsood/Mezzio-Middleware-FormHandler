@@ -4,6 +4,8 @@
 namespace depa\FormularHandlerMiddleware\Adapter;
 
 use depa\FormularHandlerMiddleware\AbstractAdapter;
+use Twig;
+use Exception;
 
 class PhpMail extends AbstractAdapter
 {
@@ -17,19 +19,19 @@ class PhpMail extends AbstractAdapter
         $mailData = $this->config['adapter']['phpmail'];
 
         try {
-            $loader = new \Twig\Loader\ArrayLoader([
-                'test.html' => $mailData['template'],
+            $loader = new Twig\Loader\ArrayLoader([
+                'mail.html' => $mailData['template'],
             ]);
-            $twig = new \Twig\Environment($loader);
+            $twig = new Twig\Environment($loader);
 
-            $mailMessage = $twig->render('test.html', $formData);
+            $mailMessage = $twig->render('mail.html', $formData);
 
             $replyTo = $this->replyTo($mailData);
             if(!$this->errorStatus){
                 $this->sendMail($mailData, $mailMessage, $replyTo);
             }
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             parent::setError('Error occourd in: ' . $e->getFile() . ' on line: ' . $e->getLine() . ' with message: ' . $e->getMessage());
         }
     }
@@ -40,20 +42,24 @@ class PhpMail extends AbstractAdapter
      *
      * @param $mailData
      * @param $mailMessage
+     * @param $replyTo
+     * @throws Twig\Error\LoaderError
+     * @throws Twig\Error\RuntimeError
+     * @throws Twig\Error\SyntaxError
      */
     private function sendMail($mailData, $mailMessage, $replyTo)
     {
-        $loader = new \Twig\Loader\ArrayLoader([
-            'test.html' => $mailData['subject'],
+        $loader = new Twig\Loader\ArrayLoader([
+            'mail.html' => $mailData['subject'],
         ]);
-        $twig = new \Twig\Environment($loader);
+        $twig = new Twig\Environment($loader);
 
         $replacements = [];
         foreach ($this->validFields as $key => $value) {
             $replacements[$key] = $value;
         }
 
-        $mailSubject = $twig->render('test.html', $replacements);
+        $mailSubject = $twig->render('mail.html', $replacements);
 
         $header = array(
             'From' => $mailData['sender'],
@@ -76,7 +82,7 @@ class PhpMail extends AbstractAdapter
     /**
      * Prüft die übergebene Config (beinhaltet den Adapter) nach den benötigten Werten.
      * @param $config
-     * @return |null
+     * @return array |null
      */
     protected function checkConfig($config)
     {

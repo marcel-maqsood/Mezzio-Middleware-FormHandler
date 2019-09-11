@@ -4,6 +4,11 @@
 namespace depa\FormularHandlerMiddleware\Adapter;
 
 use depa\FormularHandlerMiddleware\AbstractAdapter;
+use Swift_Mailer;
+use Swift_Message;
+use Swift_SmtpTransport;
+use Twig;
+use Exception;
 
 class SmtpMail extends AbstractAdapter
 {
@@ -12,7 +17,7 @@ class SmtpMail extends AbstractAdapter
     /**
      * Prüft die übergebene Config (beinhaltet den Adapter) nach den benötigten Werten.
      * @param $config
-     * @return |null
+     * @return array |null
      */
     protected function checkConfig($config)
     {
@@ -81,10 +86,10 @@ class SmtpMail extends AbstractAdapter
         $mailData = $this->config['adapter']['smtpmail']; //macht sinn das in abstractadapter auszulagern, und den config eintrag per klassen variable zu setzen (['adapter'][$this->name];)?
 
         try {
-            $loader = new \Twig\Loader\ArrayLoader([
+            $loader = new Twig\Loader\ArrayLoader([
                 'test.html' => $mailData['template'],
             ]);
-            $twig = new \Twig\Environment($loader);
+            $twig = new Twig\Environment($loader);
 
             $mailMessage = $twig->render('test.html', $formData);
 
@@ -93,7 +98,7 @@ class SmtpMail extends AbstractAdapter
                 $this->sendMail($mailData, $mailMessage, $replyTo);
             }
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             parent::setError('Error occourd in: ' . $e->getFile() . ' on line: ' . $e->getLine() . ' with message: ' . $e->getMessage());
         }
     }
@@ -101,16 +106,20 @@ class SmtpMail extends AbstractAdapter
     /**
      * @param $mailData
      * @param $mailMessage
+     * @param $replyTo
+     * @throws Twig\Error\LoaderError
+     * @throws Twig\Error\RuntimeError
+     * @throws Twig\Error\SyntaxError
      */
     private function sendMail($mailData, $mailMessage, $replyTo)
     {
 
         $transport = $this->createTransporter();
 
-        $loader = new \Twig\Loader\ArrayLoader([
+        $loader = new Twig\Loader\ArrayLoader([
             'test.html' => $mailData['subject'],
         ]);
-        $twig = new \Twig\Environment($loader);
+        $twig = new Twig\Environment($loader);
 
         $replacements = [];
         foreach ($this->validFields as $key => $value) {
@@ -120,8 +129,8 @@ class SmtpMail extends AbstractAdapter
         $mailSubject = $twig->render('test.html', $replacements);
 
         foreach ($mailData['recipients'] as $recipient) {
-            $mailer = new \Swift_Mailer($transport);
-            $message = (new \Swift_Message())
+            $mailer = new Swift_Mailer($transport);
+            $message = (new Swift_Message())
                 ->setSubject($mailSubject)
                 ->setFrom([$mailData['sender'] => $mailData['senderName']])
                 ->setTo([$recipient])
@@ -150,7 +159,7 @@ class SmtpMail extends AbstractAdapter
         $port = $transfer_config['port'];
 
         if ($service == "localhost") {
-            return new \Swift_SmtpTransport($service, $port);
+            return new Swift_SmtpTransport($service, $port);
         }
 
         if (!isset($transfer_config['encryption']) || is_null($transfer_config['encryption'])) {
@@ -168,7 +177,7 @@ class SmtpMail extends AbstractAdapter
         }
         $password = $transfer_config['password'];
 
-        return (new \Swift_SmtpTransport($service, $port, $encryption))
+        return (new Swift_SmtpTransport($service, $port, $encryption))
             ->setUsername($email)
             ->setPassword($password);
 
