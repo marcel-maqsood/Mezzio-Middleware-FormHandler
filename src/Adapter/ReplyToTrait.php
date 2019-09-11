@@ -1,13 +1,18 @@
 <?php
 
 namespace depa\FormularHandlerMiddleware\Adapter;
+
 /**
+ * Stellt die replyTo Funktion bereit.
+ *
  * Trait ReplyToTrait
  * @package depa\FormularHandlerMiddleware\Adapter
  */
 trait ReplyToTrait{
 
     /**
+     * Gibt, sofern konfiguriert eine Email zurück, die als reply-to verwendet wird
+     *
      * @param $mailData array
      * @return string|null
      */
