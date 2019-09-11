@@ -1,19 +1,15 @@
 <?php
 
-
 namespace depa\FormularHandlerMiddleware\Adapter;
-
 
 use depa\FormularHandlerMiddleware\AbstractAdapter;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class Wufoo
- * @package depa\FormularHandlerMiddleware\Adapter
+ * Class Wufoo.
  */
 class Wufoo extends AbstractAdapter
 {
-
     /**
      * @param $config
      */

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace depa\FormularHandlerMiddleware\Adapter;
 
 use depa\FormularHandlerMiddleware\Formular;
@@ -10,6 +9,7 @@ class SmtpMailFactory
 {
     /**
      * @param ContainerInterface $container
+     *
      * @return SmtpMail
      */
     public function __invoke(ContainerInterface $container) : SmtpMail

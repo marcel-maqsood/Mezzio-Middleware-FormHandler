@@ -1,17 +1,14 @@
 <?php
 
-
 namespace depa\FormularHandlerMiddleware;
 
-
-use depa\FormularHandlerMiddleware\Adapter\SmtpMail;
-use depa\FormularHandlerMiddleware\Adapter\PhpMail;
 use depa\FormularHandlerMiddleware\Adapter\PdoDatabase;
+use depa\FormularHandlerMiddleware\Adapter\PhpMail;
+use depa\FormularHandlerMiddleware\Adapter\SmtpMail;
 use depa\FormularHandlerMiddleware\Adapter\Wufoo;
 
 /**
- * Class Formular
- * @package depa\FormularHandlerMiddleware
+ * Class Formular.
  */
 class Formular
 {
@@ -42,6 +39,7 @@ class Formular
 
     /**
      * Formular constructor.
+     *
      * @param array $config
      * @param array $requestData
      */
@@ -54,6 +52,7 @@ class Formular
 
     /**
      * Gibt die im Formular-Objekt gespeicherten Fomular-Daten zurück.
+     *
      * @return array
      */
     public function getRequestData(): array
@@ -62,7 +61,8 @@ class Formular
     }
 
     /**
-     * Setzt die Formular-Daten im Formular-Objekt
+     * Setzt die Formular-Daten im Formular-Objekt.
+     *
      * @param array $data
      */
     public function setRequestData(array $data)
@@ -71,7 +71,8 @@ class Formular
     }
 
     /**
-     * Gibt die im Formular-Objekt gespeicherte Array-Config des Formulars zurück
+     * Gibt die im Formular-Objekt gespeicherte Array-Config des Formulars zurück.
+     *
      * @return array
      */
     public function getConfig()
@@ -80,7 +81,8 @@ class Formular
     }
 
     /**
-     * Setzt die Array-Config des Formulars im Formular-Objekt
+     * Setzt die Array-Config des Formulars im Formular-Objekt.
+     *
      * @param array $data
      */
     public function setConfig(array $data)
@@ -94,12 +96,13 @@ class Formular
     public function checkFormConfigFields()
     {
         if (!isset($this->getConfig()['fields']) || is_null($this->getConfig()['fields'] || !is_array($this->getConfig()['fields']))) {
-            $this->setError("No fields defined in Formular-Config.");
+            $this->setError('No fields defined in Formular-Config.');
         }
     }
 
     /**
      * Setzt einen Error mit Beschreibung.
+     *
      * @param $errorDescription
      */
     private function setError($errorDescription)
@@ -110,6 +113,7 @@ class Formular
 
     /**
      * Gibt ein Boolean zurück, der aussagt ob es ein Fehler gab oder nicht.
+     *
      * @return bool
      */
     public function getErrorStatus()
@@ -119,6 +123,7 @@ class Formular
 
     /**
      * Gibt die Beschreibung des Fehler zurück.
+     *
      * @return string
      */
     public function getErrorDescription()
@@ -128,6 +133,7 @@ class Formular
 
     /**
      * Gibt die in der Array-Config des Formulars definierten Felder zurück.
+     *
      * @return mixed
      */
     public function getFormConfigFields()
@@ -137,6 +143,7 @@ class Formular
 
     /**
      * Gibt den in der Array-Config des Formulars definierten Adapter zurück.
+     *
      * @return mixed
      */
     public function getFormConfigAdapter()
@@ -150,15 +157,14 @@ class Formular
      */
     public function validateRequestData()
     {
-
-        if(!isset($this->config['fields']) || !is_array($this->config['fields'])){
+        if (!isset($this->config['fields']) || !is_array($this->config['fields'])) {
             $this->setError('The Form-Config is missing a definition for fields!');
-        }else{
+        } else {
             $validFields = null;
             foreach ($this->config['fields'] as $field => $fieldEntry) {
                 if (isset($fieldEntry['required']) && $fieldEntry['required'] == true) {
                     if (!isset($this->requestData[$field])) {
-                        $this->setError('The field ' . $field . ' was not found in the submitted form!');
+                        $this->setError('The field '.$field.' was not found in the submitted form!');
                     }
                 }
 
@@ -168,29 +174,30 @@ class Formular
             }
             $this->validFields = $validFields;
         }
-
     }
 
     /**
      * Gibt die Felder zurück, die in der validateRequestData funktion als vorhanden in der Array-Config gespeichert wurden.
+     *
      * @return array
      */
-    public function getValidFields(){
+    public function getValidFields()
+    {
         return $this->validFields;
     }
 
     /**
      * Erstellt einen Treiber, auf welcher Basis die Daten des Formulars abgespeichert/versendet werden.
+     *
      * @return SmtpMail|PdoDatabase|Wufoo|null
      */
-    public function createDriver(){
-
+    public function createDriver()
+    {
         $driverName = strtolower(key($this->getFormConfigAdapter()));
 
         $driver = null;
 
-
-        switch ($driverName){
+        switch ($driverName) {
             case 'smtpmail':
                 $driver = new SmtpMail($this->config, $this->validFields);
                 break;
@@ -204,7 +211,7 @@ class Formular
                 $driver = new Wufoo($this->config, $this->validFields);
                 break;
         }
+
         return $driver;
     }
-
 }

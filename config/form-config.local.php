@@ -6,19 +6,19 @@ return [
         'adapter' => [
             'testAdapter-1' => [
                 'smtpmail' => [
-                    'recipients' => ['maqsood@designpark.de'],
-                    'subject' => 'Anmeldung als Arbeitnehmer über paulihealthpeople.de',
-                    'sender' => 'formular@paulihealthpeople.de',
-                    'senderName' => 'Kontaktformular',
-                    'template' => 'formular::bewerber',
+                    'recipients'     => ['maqsood@designpark.de'],
+                    'subject'        => 'Anmeldung als Arbeitnehmer über paulihealthpeople.de',
+                    'sender'         => 'formular@paulihealthpeople.de',
+                    'senderName'     => 'Kontaktformular',
+                    'template'       => 'formular::bewerber',
                     'email_transfer' => [
-                        'method' => "smtp",
+                        'method' => 'smtp',
                         'config' => [
-                            'service' => "smtp.googlemail.com",
-                            'port' => "465",
-                            'encryption' => "ssl",
-                            'email' => "marcel.dp.designpark@gmail.com",
-                            'password' => "marceldesignpark",
+                            'service'    => 'smtp.googlemail.com',
+                            'port'       => '465',
+                            'encryption' => 'ssl',
+                            'email'      => 'marcel.dp.designpark@gmail.com',
+                            'password'   => 'marceldesignpark',
                         ],
                     ],
                 ],
@@ -40,18 +40,18 @@ return [
                         'type' => 'text',
                     ],
                     'city' => [
-                        'type' => 'text'
+                        'type' => 'text',
                     ],
                     'country' => [
                         'type' => 'text',
                     ],
                     'phone' => [
                         'required' => true,
-                        'type' => 'tel',
+                        'type'     => 'tel',
                     ],
                     'mail' => [
                         'required' => true,
-                        'type' => 'email',
+                        'type'     => 'email',
                     ],
                     'message' => [
                         'required' => true,
@@ -63,22 +63,22 @@ return [
                     'smtpmail' => [
                         'reply-to' => [
                             'status' => true, // true/false
-                            'field' => 'mail' // Das Feld im post, welches die Email Adresse der Person benhaltet
+                            'field'  => 'mail', // Das Feld im post, welches die Email Adresse der Person benhaltet
                         ],
                         'recipients' => ['maqsood@designpark.de'],
-                        'subject' => 'Anfrage über paulihealthpeople.de',
-                        'sender' => 'formular@paulihealthpeople.de',
+                        'subject'    => 'Anfrage über paulihealthpeople.de',
+                        'sender'     => 'formular@paulihealthpeople.de',
                         'senderName' => 'Kontaktformular',
                         //Template bleibt in dieser Form nicht bestehen.
-                        'template' => 'formular::contact',
+                        'template'       => 'formular::contact',
                         'email_transfer' => [
-                            'method' => "smtp",
+                            'method' => 'smtp',
                             'config' => [
-                                'service' => "smtp.googlemail.com",
-                                'port' => "465",
-                                'encryption' => "ssl",
-                                'email' => "marcel.dp.designpark@gmail.com",
-                                'password' => "marceldesignpark",
+                                'service'    => 'smtp.googlemail.com',
+                                'port'       => '465',
+                                'encryption' => 'ssl',
+                                'email'      => 'marcel.dp.designpark@gmail.com',
+                                'password'   => 'marceldesignpark',
                             ],
                         ],
                     ],
@@ -88,31 +88,31 @@ return [
                 'fields' => [
                     'name' => [
                         'required' => true,
-                        'type' => 'text',
+                        'type'     => 'text',
                     ],
                     'forename' => [
                         'required' => true,
-                        'type' => 'text',
+                        'type'     => 'text',
                     ],
                     'qualification' => [
                         'required' => true,
-                        'type' => "text",
+                        'type'     => 'text',
                     ],
                     'street' => [
                         'required' => true,
-                        'type' => 'text',
+                        'type'     => 'text',
                     ],
                     'city' => [
                         'required' => true,
-                        'type' => 'text'
+                        'type'     => 'text',
                     ],
                     'email' => [
                         'required' => true,
-                        'type' => 'email',
+                        'type'     => 'email',
                     ],
                     'phone' => [
                         'required' => true,
-                        'type' => 'tel',
+                        'type'     => 'tel',
                     ],
                     'message' => [
                         'required' => true,
@@ -123,19 +123,19 @@ return [
                 ],
                 'adapter' => [
                     'smtpmail' => [
-                        'recipients' => ['maqsood@designpark.de'],
-                        'subject' => 'Anmeldung als Arbeitnehmer über {subject}',
-                        'sender' => 'formular@paulihealthpeople.de',
-                        'senderName' => 'Kontaktformular',
-                        'template' => 'formular::bewerber',
+                        'recipients'     => ['maqsood@designpark.de'],
+                        'subject'        => 'Anmeldung als Arbeitnehmer über {subject}',
+                        'sender'         => 'formular@paulihealthpeople.de',
+                        'senderName'     => 'Kontaktformular',
+                        'template'       => 'formular::bewerber',
                         'email_transfer' => [
-                            'method' => "smtp",
+                            'method' => 'smtp',
                             'config' => [
-                                'service' => "smtp.googlemail.com",
-                                'port' => "465",
-                                'encryption' => "ssl",
-                                'email' => "marcel.dp.designpark@gmail.com",
-                                'password' => "marceldesignpark",
+                                'service'    => 'smtp.googlemail.com',
+                                'port'       => '465',
+                                'encryption' => 'ssl',
+                                'email'      => 'marcel.dp.designpark@gmail.com',
+                                'password'   => 'marceldesignpark',
                             ],
                         ],
                     ],
@@ -151,27 +151,27 @@ return [
                     ],
                     'ansprechpartner_name' => [
                         'required' => true,
-                        'type' => 'text',
+                        'type'     => 'text',
                     ],
                     'ansprechpartner_forename' => [
                         'required' => true,
-                        'type' => 'text',
+                        'type'     => 'text',
                     ],
                     'funktion' => [
                         'required' => true,
-                        'type' => 'text'
+                        'type'     => 'text',
                     ],
                     'street_arbeitgeber' => [
                         'required' => true,
-                        'type' => 'text',
+                        'type'     => 'text',
                     ],
                     'zipcode_arbeitgeber' => [
                         'required' => true,
-                        'type' => 'text',
+                        'type'     => 'text',
                     ],
                     'city_arbeitgeber' => [
                         'required' => true,
-                        'type' => 'email',
+                        'type'     => 'email',
                     ],
                     'phone_arbeitgeber' => [
                         'required' => true,
@@ -192,19 +192,19 @@ return [
                 'adapter' => [
                     'testAdapter-1',
                     'smtpmail' => [
-                        'recipients' => ['maqsood@designpark.de'],
-                        'subject' => 'Anmeldung als Arbeitnehmer über paulihealthpeople.de',
-                        'sender' => 'formular@paulihealthpeople.de',
-                        'senderName' => 'Kontaktformular',
-                        'template' => 'formular::bewerber',
+                        'recipients'     => ['maqsood@designpark.de'],
+                        'subject'        => 'Anmeldung als Arbeitnehmer über paulihealthpeople.de',
+                        'sender'         => 'formular@paulihealthpeople.de',
+                        'senderName'     => 'Kontaktformular',
+                        'template'       => 'formular::bewerber',
                         'email_transfer' => [
-                            'method' => "smtp",
+                            'method' => 'smtp',
                             'config' => [
-                                'service' => "smtp.googlemail.com",
-                                'port' => "465",
-                                'encryption' => "ssl",
-                                'email' => "marcel.dp.designpark@gmail.com",
-                                'password' => "marceldesignpark",
+                                'service'    => 'smtp.googlemail.com',
+                                'port'       => '465',
+                                'encryption' => 'ssl',
+                                'email'      => 'marcel.dp.designpark@gmail.com',
+                                'password'   => 'marceldesignpark',
                             ],
                         ],
                     ],

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace depa\FormularHandlerMiddleware;
 
-
 class ConfigProvider
 {
     /**
@@ -17,9 +16,8 @@ class ConfigProvider
         ];
     }
 
-
     /**
-     * Returns the container dependencies
+     * Returns the container dependencies.
      */
     public function getDependencies() : array
     {
@@ -29,7 +27,7 @@ class ConfigProvider
             ],
             'factories' => [
                 FormularHandlerMiddleware::class => FormularHandlerMiddlewareFactory::class,
-                Formular::class => FormularFactory::class,
+                Formular::class                  => FormularFactory::class,
             ],
         ];
     }

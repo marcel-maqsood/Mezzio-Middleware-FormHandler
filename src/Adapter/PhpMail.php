@@ -1,24 +1,22 @@
 <?php
 
-
 namespace depa\FormularHandlerMiddleware\Adapter;
 
 use depa\FormularHandlerMiddleware\AbstractAdapter;
-use Twig;
 use Exception;
+use Twig;
 
 /**
  * Versendet Mail über PHP mail().
  *
  * Class PhpMail
- * @package depa\FormularHandlerMiddleware\Adapter
  */
 class PhpMail extends AbstractAdapter
 {
     use ReplyToTrait;
 
     /**
-     * Rendert und versendet die EMail
+     * Rendert und versendet die EMail.
      */
     public function handleData()
     {
@@ -34,12 +32,11 @@ class PhpMail extends AbstractAdapter
             $mailMessage = $twig->render('mailMessage.html', $formData);
 
             $replyTo = $this->replyTo($mailData);
-            if(!$this->errorStatus){
+            if (!$this->errorStatus) {
                 $this->sendMail($mailData, $mailMessage, $replyTo);
             }
-
         } catch (Exception $e) {
-            parent::setError('Error occourd in: ' . $e->getFile() . ' on line: ' . $e->getLine() . ' with message: ' . $e->getMessage());
+            parent::setError('Error occourd in: '.$e->getFile().' on line: '.$e->getLine().' with message: '.$e->getMessage());
         }
     }
 
@@ -49,6 +46,7 @@ class PhpMail extends AbstractAdapter
      * @param $mailData
      * @param $mailMessage
      * @param $replyTo
+     *
      * @throws Twig\Error\LoaderError
      * @throws Twig\Error\RuntimeError
      * @throws Twig\Error\SyntaxError
@@ -67,15 +65,14 @@ class PhpMail extends AbstractAdapter
 
         $mailSubject = $twig->render('mailSubject.html', $replacements);
 
-        $header = array(
+        $header = [
             'From' => $mailData['sender'],
-        );
-        if(!is_null($replyTo)){
+        ];
+        if (!is_null($replyTo)) {
             $header['Reply-to'] = $replyTo;
         }
 
         foreach ($mailData['recipients'] as $recipient) {
-
             mail(
                 $recipient,
                 $mailSubject,
@@ -86,45 +83,52 @@ class PhpMail extends AbstractAdapter
     }
 
     /**
-     * Überprüft das übergebene Config-Array
+     * Überprüft das übergebene Config-Array.
      *
      * @param $config
+     *
      * @return array |null
      */
     protected function checkConfig($config)
     {
         if (!isset($config['adapter']) || is_null($config['adapter']) || !is_array($config['adapter'])) {
             parent::setError('The adapter was not found in config!');
-            return null;
+
+            return;
         }
         if (!isset($config['adapter']['phpmail']) || is_null($config['adapter']['phpmail']) || !is_array($config['adapter']['phpmail'])) {
             parent::setError('There is no mail-config inside the adapter!');
-            return null;
+
+            return;
         }
         $mailConfig = $config['adapter']['phpmail'];
 
         if (!isset($mailConfig['recipients']) || is_null($mailConfig['recipients']) || !is_array($mailConfig['recipients'])) {
             //Fehler: ungültige definition von recipients
             parent::setError('recipients-arraay is not properly defined in adapter!');
-            return null;
+
+            return;
         }
 
         if (!isset($mailConfig['subject']) || is_null($mailConfig['subject']) || !is_string($mailConfig['subject'])) {
             //Fehler: ungültige definition von Subject
             parent::setError('There is no subject defined inside the adapter!');
-            return null;
+
+            return;
         }
 
         if (!isset($mailConfig['sender']) || is_null($mailConfig['sender']) || !is_string($mailConfig['sender'])) {
             //Fehler: ungültige definition von Subject
             parent::setError('There is no sender defined inside the adapter!');
-            return null;
+
+            return;
         }
 
         if (!isset($mailConfig['senderName']) || is_null($mailConfig['senderName']) || !is_string($mailConfig['senderName'])) {
             //Fehler: ungültige definition von Subject
             parent::setError('There is no senderName defined inside the adapter!');
-            return null;
+
+            return;
         }
 
         return $config;

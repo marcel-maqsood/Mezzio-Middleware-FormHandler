@@ -12,8 +12,7 @@ use Zend\Json\Json;
 use Zend\ProblemDetails\ProblemDetailsResponseFactory;
 
 /**
- * Class FormularHandlerMiddleware
- * @package depa\FormularHandlerMiddleware
+ * Class FormularHandlerMiddleware.
  */
 class FormularHandlerMiddleware implements RequestHandlerInterface
 {
@@ -39,8 +38,9 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
 
     /**
      * FormularHandlerMiddleware constructor.
+     *
      * @param $formDefinition
-     * @param Formular $formularObj
+     * @param Formular                      $formularObj
      * @param ProblemDetailsResponseFactory $problemDetails
      */
     public function __construct($formDefinition, Formular $formularObj, ProblemDetailsResponseFactory $problemDetails)
@@ -52,6 +52,7 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
 
     /**
      * @param ServerRequestInterface $request
+     *
      * @return ResponseInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -63,9 +64,9 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
             return $this->problemDetails->createResponse(
                 $request,
                 400,
-                "Data was missing in submitted form.",
+                'Data was missing in submitted form.',
                 self::STATUS_MISSING_VALUE,
-                "N/A"
+                'N/A'
             );
         }
 
@@ -77,7 +78,7 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
                 500,
                 "Der Verweis auf die Formular-Konfiguration fehlt. Das Formular benötigt ein entsprechendes Hidden-Feld mit dem Namen 'config'.",
                 self::STATUS_MISSING_VALUE,
-                "N/A"
+                'N/A'
             );
         }
 
@@ -93,12 +94,12 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
                 400,
                 $this->formularObj->getErrorDescription(),
                 self::STATUS_MISSING_VALUE,
-                "N/A"
+                'N/A'
             );
         }
 
         $dataDriver = $this->formularObj->createDriver();
-        if($dataDriver->getErrorStatus()){
+        if ($dataDriver->getErrorStatus()) {
             return $this->problemDetails->createResponse(
                 $request,
                 500,
@@ -107,6 +108,7 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
                 'N/A'
             );
         }
+
         return new JsonResponse(
             'The email was successfully sent!',
             200,
@@ -119,11 +121,12 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
      * um an stelle des Namen ein tatsächliches config-Array einzubauen.
      *
      * @param $formConfig
+     *
      * @return mixed
      */
     private function makeFormConfig($formConfig)
     {
-        if(!isset($formConfig['adapter']) || !is_array($formConfig['adapter'])){
+        if (!isset($formConfig['adapter']) || !is_array($formConfig['adapter'])) {
             return $formConfig;
         }
 
@@ -137,6 +140,7 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
                 }
             }
         }
+
         return $formConfig;
     }
 }

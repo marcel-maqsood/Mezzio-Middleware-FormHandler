@@ -1,20 +1,19 @@
 <?php
 
-
 namespace depa\FormularHandlerMiddleware\Adapter;
 
 use depa\FormularHandlerMiddleware\Formular;
-use \PDO;
+use PDO;
 use Psr\Container\ContainerInterface;
 
 /**
- * Class WufooFactory
- * @package depa\FormularHandlerMiddleware\Adapter
+ * Class WufooFactory.
  */
 class WufooFactory
 {
     /**
      * @param ContainerInterface $container
+     *
      * @return Wufoo
      */
     public function __invoke(ContainerInterface $container) : Wufoo

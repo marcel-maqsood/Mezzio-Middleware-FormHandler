@@ -8,13 +8,13 @@ use Psr\Container\ContainerInterface;
 use Zend\ProblemDetails\ProblemDetailsResponseFactory;
 
 /**
- * Class FormularHandlerMiddlewareFactory
- * @package depa\FormularHandlerMiddleware
+ * Class FormularHandlerMiddlewareFactory.
  */
 class FormularHandlerMiddlewareFactory
 {
     /**
      * @param ContainerInterface $container
+     *
      * @return FormularHandlerMiddleware
      */
     public function __invoke(ContainerInterface $container) : FormularHandlerMiddleware
@@ -29,11 +29,11 @@ class FormularHandlerMiddlewareFactory
          * nun werden im form-objekt die formulardaten überprüft
          *
          * ist alles ok, werden die formdaten je nach adapter "gesendet"
-        */
-
+         */
         $formConfig = $container->get('config')['depaForm'];
         $formularObj = $container->get(Formular::class);
         $problemDetails = $container->get(ProblemDetailsResponseFactory::class);
-        return new FormularHandlerMiddleware( $formConfig, $formularObj, $problemDetails);
+
+        return new FormularHandlerMiddleware($formConfig, $formularObj, $problemDetails);
     }
 }
