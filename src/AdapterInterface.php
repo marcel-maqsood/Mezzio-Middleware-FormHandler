@@ -3,11 +3,14 @@ declare(strict_types=1);
 
 namespace depa\FormularHandlerMiddleware;
 
-
+/**
+ * Interface AdapterInterface
+ * @package depa\FormularHandlerMiddleware
+ */
 interface AdapterInterface
 {
     /**
-     * Soll die Daten basierend auf dem jeweiligen Adapter verarbeiten
+     * Verarbeitet die Daten basierend auf dem benutzten Adapter.
      * @return mixed
      */
     public function handleData();

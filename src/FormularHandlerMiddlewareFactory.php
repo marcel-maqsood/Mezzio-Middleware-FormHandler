@@ -7,8 +7,16 @@ namespace depa\FormularHandlerMiddleware;
 use Psr\Container\ContainerInterface;
 use Zend\ProblemDetails\ProblemDetailsResponseFactory;
 
+/**
+ * Class FormularHandlerMiddlewareFactory
+ * @package depa\FormularHandlerMiddleware
+ */
 class FormularHandlerMiddlewareFactory
 {
+    /**
+     * @param ContainerInterface $container
+     * @return FormularHandlerMiddleware
+     */
     public function __invoke(ContainerInterface $container) : FormularHandlerMiddleware
     {
         /**

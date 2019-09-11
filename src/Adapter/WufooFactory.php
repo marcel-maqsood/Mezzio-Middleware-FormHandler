@@ -7,6 +7,10 @@ use depa\FormularHandlerMiddleware\Formular;
 use \PDO;
 use Psr\Container\ContainerInterface;
 
+/**
+ * Class WufooFactory
+ * @package depa\FormularHandlerMiddleware\Adapter
+ */
 class WufooFactory
 {
     /**

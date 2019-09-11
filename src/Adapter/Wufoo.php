@@ -7,6 +7,10 @@ namespace depa\FormularHandlerMiddleware\Adapter;
 use depa\FormularHandlerMiddleware\AbstractAdapter;
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * Class Wufoo
+ * @package depa\FormularHandlerMiddleware\Adapter
+ */
 class Wufoo extends AbstractAdapter
 {
 

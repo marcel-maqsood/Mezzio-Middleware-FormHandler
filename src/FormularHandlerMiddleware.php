@@ -11,10 +11,15 @@ use Zend\Diactoros\Response\JsonResponse;
 use Zend\Json\Json;
 use Zend\ProblemDetails\ProblemDetailsResponseFactory;
 
-
+/**
+ * Class FormularHandlerMiddleware
+ * @package depa\FormularHandlerMiddleware
+ */
 class FormularHandlerMiddleware implements RequestHandlerInterface
 {
-
+    /**
+     * @const STATUS_MISSING_VALUE
+     */
     const STATUS_MISSING_VALUE = 'MISSING_VALUE';
 
     /**
@@ -32,6 +37,12 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
      */
     private $formularObj;
 
+    /**
+     * FormularHandlerMiddleware constructor.
+     * @param $formDefinition
+     * @param Formular $formularObj
+     * @param ProblemDetailsResponseFactory $problemDetails
+     */
     public function __construct($formDefinition, Formular $formularObj, ProblemDetailsResponseFactory $problemDetails)
     {
         $this->formDefinition = $formDefinition;
