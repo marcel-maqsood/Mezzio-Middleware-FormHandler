@@ -36,14 +36,15 @@ class Formular
     private $requestData;
 
     /**
-     *
      * @var array
      */
     private $validFields;
 
-    //Es macht keinen Sinn, immer wieder das selbe zu definieren (FormularHandlerMiddleware...), constanten in eigene Klasse auslagern, die man über container abruft?
-    const STATUS_MISSING_VALUE = 'MISSING_VALUE';
-
+    /**
+     * Formular constructor.
+     * @param array $config
+     * @param array $requestData
+     */
     public function __construct(array $config = [], array $requestData = [])
     {
         $this->config = $config;
@@ -88,7 +89,7 @@ class Formular
     }
 
     /**
-     *Prüft, ob "fields" in der Aray-Config des Formulars definiert wurde.
+     *Prüft, ob "fields" in der Array-Config des Formulars definiert wurde.
      */
     public function checkFormConfigFields()
     {
@@ -117,7 +118,7 @@ class Formular
     }
 
     /**
-     *
+     * Gibt die Beschreibung des Fehler zurück.
      * @return string
      */
     public function getErrorDescription()
