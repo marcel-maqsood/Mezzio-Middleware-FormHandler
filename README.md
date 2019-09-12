@@ -36,6 +36,11 @@ To Implement the Middleware, just add a Route to your routes files that passes i
 after that, be sure to provide a config-file inside your config/autoload folder, that contains anything the Middleware needs to check your forms.
 (we recommend you to use our config-file (which is in the config- folder) and just adjust it to fit your needs)
 
+Verschachtelte Klammern bitte wegnehmen
+Hinweis auf das Format der POPST-Daten
+Hinweis auf das Format der Rückmeldungen
+
+
 ### The Adapters ###
 Currently there are 2 working Adapters:
 * phpmail
@@ -192,20 +197,20 @@ If you want to set a field as required add this into the config of the field:
 ```php
 'depaForm' => [
     'adapter' => [
-        'globalTestAdapter-1' => [
+        'globalExampleAdapter-1' => [
             'smtpmail' => [
-                'recipients'     => ['marcel.dp.designpark@gmail.com'],
+                'recipients'     => ['recipient@example.com'],
                 'subject'        => 'base subject all forms that uses this specific adaper has',
                 'sender'         => 'example@example.com',
                 'senderName'     => 'Kontaktformular',
                 'template'       => 'nothing',
                 'email_transfer' => [
                     'config' => [
-                        'service'    => 'smtp.googlemail.com',
+                        'service'    => 'smtp.example.com',
                         'port'       => '465',
                         'encryption' => 'ssl',
-                        'email'      => 'marcel.dp.designpark@gmail.com',
-                        'password'   => 'marceldesignpark',
+                        'email'      => 'example@example.com',
+                        'password'   => 'yourPassword',
                     ],
                 ],
             ],
@@ -238,7 +243,7 @@ If you want to set a field as required add this into the config of the field:
                 ],
             ],
             'adapter' => [
-                'globalTestAdapter-1'
+                'globalExampleAdapter-1'
             ],
         ],
         'otherForm' => [
@@ -273,7 +278,7 @@ If you want to set a field as required add this into the config of the field:
                         'field'  => 'mail'
                     ],
                     'recipients' => ['example@example.com'],
-                    'subject'    => 'subject',
+                    'subject'    => 'example subject',
                     'sender'     => 'sender@example.com',
                     'senderName' => 'Form',
                     'template'       => 'Test {{message}} {{mail}}',
@@ -291,5 +296,5 @@ This bundle has been developed by [designpark](https://www.designpark.de).
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The MIT License (MIT). Please see [License File](LICENSE) for more information.
 
