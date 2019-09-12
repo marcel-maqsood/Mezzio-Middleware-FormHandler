@@ -47,13 +47,6 @@ class SmtpMail extends AbstractAdapter
         }
         $mailTransfer = $mailConfig['email_transfer'];
 
-        if (!isset($mailTransfer['method']) || is_null($mailTransfer['method']) || is_array($mailTransfer['method'])) {
-            //Fehler: keine gültige definition für Transfer-Methode
-            parent::setError('There is no method defined inside the email_transfer config!');
-
-            return;
-        }
-
         if (!isset($mailTransfer['config']) || is_null($mailTransfer['config']) || !is_array($mailTransfer['config'])) {
             //Fehler: ungültige Config für Transfer-Methode
             parent::setError('There is no mail-config defined inside the email_transfer config!');
