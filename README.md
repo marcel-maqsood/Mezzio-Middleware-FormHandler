@@ -19,7 +19,7 @@ If your form has fields that are not defined inside the config, the handler will
 
 ## Documentation
 
-At the bottom of the Doc, i'll show you a quick Example on how the config is build like.
+At the bottom of the Doc, i'll show you a quick example on how the config is build like.
 
 ### The Implementation ###
 To Implement the Middleware, just add a Route to your routes files that passes it's request into the middleware:
@@ -34,12 +34,10 @@ To Implement the Middleware, just add a Route to your routes files that passes i
     );
    ```
 after that, be sure to provide a config-file inside your config/autoload folder, that contains anything the Middleware needs to check your forms.
-(we recommend you to use our config-file (which is in the config- folder) and just adjust it to fit your needs)
+We recommend you to use our config-file and just adjust it to fit your needs
 
-Verschachtelte Klammern bitte wegnehmen
-Hinweis auf das Format der POPST-Daten
-Hinweis auf das Format der Rückmeldungen
-
+### The needed Data ###
+The Formhandler needs JSON-Requests to run properly and also it responds with JSON, describing whats going on.
 
 ### The Adapters ###
 Currently there are 2 working Adapters:
@@ -168,7 +166,7 @@ you can define it inside the Adapter config like this:
 reply-to only works if:
 * reply-to is defined and the following is correct;
 * Status is defined and true;
-* field is defined (and in config) or not defined (but then some field of your config must be type of email):
+* field is defined (and exists in config) or not defined (but then one field of your config must be type of email):
 ```php
 'forms' => [
     'contact' => [
