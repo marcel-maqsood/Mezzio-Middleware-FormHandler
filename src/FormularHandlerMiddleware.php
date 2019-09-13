@@ -98,6 +98,7 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
             );
         }
 
+        //TODO: Ab hier noch mal drüber nachdenken
         $dataDriver = $this->formularObj->createDriver();
         if ($dataDriver->getErrorStatus()) {
             return $this->problemDetails->createResponse(
