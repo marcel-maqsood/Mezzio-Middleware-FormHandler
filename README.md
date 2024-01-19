@@ -289,7 +289,7 @@ If you want to set a field as required add this into the config of the field:
 
 ## Credits
 
-This bundle has been developed by [designpark](https://www.designpark.de).
+This bundle has been developed by [designpark](https://www.designpark.de) and has been forked by [ElectricBrands](https://www.electricbrands.de)
 
 
 ## License
