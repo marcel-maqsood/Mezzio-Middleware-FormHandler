@@ -1,6 +1,6 @@
 <?php
 
-namespace depa\FormularHandlerMiddleware\Adapter\Exception;
+namespace ElectricBrands\FormularHandlerMiddleware\Adapter\Exception;
 
 class InvalidConfigException extends \Exception implements ExceptionInterface
 {

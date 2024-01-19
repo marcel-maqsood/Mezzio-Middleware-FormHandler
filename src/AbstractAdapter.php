@@ -1,6 +1,6 @@
 <?php
 
-namespace depa\FormularHandlerMiddleware;
+namespace ElectricBrands\FormularHandlerMiddleware;
 
 /**
  * Class AbstractAdapter.

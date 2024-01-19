@@ -1,51 +1,54 @@
 {
-    "name" : "depa/middleware-formularhandler",
-    "description" : "The middleware formularhandler is a PSR-15 middleware that provides handling from formular data in a Zend Expressive application",
-    "keywords" : [
+    "name": "electricbrands/mezzio-middleware-formhandler",
+    "description": "The middleware formularhandler is a PSR-15 middleware that provides handling from formular data in a Zend Expressive application",
+    "keywords": [
         "framework",
-        "depa",
-        "formular"
+        "electricbrands",
+        "formular",
+        "middleware"
     ],
-    "license" : "MIT",
-    "homepage" : "https://github.com/depa-berlin/Middleware-FormularHandler",
-    "config" : {
-        "platform":{"php": "7.2"}
+    "license": "MIT",
+    "homepage": "https://github.com/Electricbrands-AG/Mezzio-Middleware-FormHandler",
+    "config": {
+        "platform": {
+            "php": "8"
+        },
+        "allow-plugins": {
+            "laminas/laminas-dependency-plugin": true
+        }
     },
     "require": {
         "psr/http-server-middleware": "^1.0",
         "psr/container": "^1.0",
-        "zendframework/zend-servicemanager": "^3.4",
+        "laminas/laminas-servicemanager": "^3.4",
         "swiftmailer/swiftmailer": "^6.2",
         "true/punycode": "^2.1",
-        "zendframework/zend-problem-details": "^1.0",
-        "zendframework/zend-json": "^3.1",
-        "zendframework/zend-diactoros": "^2.1",
-        "twig/twig": "^2.11"
+        "mezzio/mezzio-problem-details": "^1.0",
+        "laminas/laminas-json": "^3.1",
+        "laminas/laminas-diactoros": "^2.1",
+        "twig/twig": "^2.11",
+        "laminas/laminas-dependency-plugin": "^2.1"
     },
-
-    "authors":      [
+    "authors": [
         {
-            "name":     "designpark",
-            "homepage": "https://www.designpark.de"
+            "name": "ElectricBrands",
+            "homepage": "https://electricbrands.de"
         },
         {
-            "name":     "Marcel Maqsood"
-        },
-        {
-            "name":     "Mirko Fenrich"
+            "name": "Marcel Maqsood"
         }
     ],
-    "autoload" : {
-        "psr-4" : {
-            "depa\\FormularHandlerMiddleware\\" : "src/"
+    "autoload": {
+        "psr-4": {
+            "ElectricBrands\\FormularHandlerMiddleware\\": "src/"
         }
     },
     "extra": {
-        "zf": {
-            "component": "depa\\FormularHandlerMiddleware",
-            "config-provider": "depa\\FormularHandlerMiddleware\\ConfigProvider"
+        "laminas": {
+            "component": "ElectricBrands\\FormularHandlerMiddleware",
+            "config-provider": "ElectricBrands\\FormularHandlerMiddleware\\ConfigProvider"
         }
     },
-    "minimum-stability" : "dev",
-    "prefer-stable" : true
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

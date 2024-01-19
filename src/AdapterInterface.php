@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace depa\FormularHandlerMiddleware;
+namespace ElectricBrands\FormularHandlerMiddleware;
 
 /**
  * Interface AdapterInterface.

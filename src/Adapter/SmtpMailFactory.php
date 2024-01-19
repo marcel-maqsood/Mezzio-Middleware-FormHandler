@@ -1,8 +1,8 @@
 <?php
 
-namespace depa\FormularHandlerMiddleware\Adapter;
+namespace ElectricBrands\FormularHandlerMiddleware\Adapter;
 
-use depa\FormularHandlerMiddleware\Formular;
+use ElectricBrands\FormularHandlerMiddleware\Formular;
 use Psr\Container\ContainerInterface;
 
 class SmtpMailFactory

@@ -1,8 +1,8 @@
 <?php
 
-namespace depa\FormularHandlerMiddleware\Adapter;
+namespace ElectricBrands\FormularHandlerMiddleware\Adapter;
 
-use depa\FormularHandlerMiddleware\AbstractAdapter;
+use ElectricBrands\FormularHandlerMiddleware\AbstractAdapter;
 use Exception;
 use Swift_Mailer;
 use Swift_Message;

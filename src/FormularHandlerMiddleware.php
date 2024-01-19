@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace depa\FormularHandlerMiddleware;
+namespace ElectricBrands\FormularHandlerMiddleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Diactoros\Response\JsonResponse;
-use Zend\Json\Json;
-use Zend\ProblemDetails\ProblemDetailsResponseFactory;
+use Laminas\Diactoros\Response\JsonResponse;
+use Laminas\Json\Json;
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 
 /**
  * Class FormularHandlerMiddleware.

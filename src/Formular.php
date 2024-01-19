@@ -1,6 +1,6 @@
 <?php
 
-namespace depa\FormularHandlerMiddleware;
+namespace ElectricBrands\FormularHandlerMiddleware;
 
 use depa\FormularHandlerMiddleware\Adapter\PdoDatabase;
 use depa\FormularHandlerMiddleware\Adapter\PhpMail;

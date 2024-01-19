@@ -1,8 +1,8 @@
 <?php
 
-namespace depa\FormularHandlerMiddleware\Adapter;
+namespace ElectricBrands\FormularHandlerMiddleware\Adapter;
 
-use depa\FormularHandlerMiddleware\AbstractAdapter;
+use ElectricBrands\FormularHandlerMiddleware\AbstractAdapter;
 
 /**
  * Die Klasse speichert die Formulardaten in einer Datenbank.
