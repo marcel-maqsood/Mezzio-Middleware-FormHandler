@@ -42,7 +42,8 @@ abstract class AbstractAdapter implements AdapterInterface
         //kann der Inhalt in der Betreffzeile der Form-Config abgerufen werden.
 
         $this->checkConfig($this->config);
-        if (!$this->errorStatus) {
+        if (!$this->errorStatus) 
+        {
             $this->handleData();
         }
     }

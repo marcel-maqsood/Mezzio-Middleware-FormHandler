@@ -14,7 +14,7 @@ use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 /**
  * Class FormularHandlerMiddleware.
  */
-class FormularHandlerMiddleware implements RequestHandlerInterface
+class FormularHandlerMiddleware implements MiddlewareInterface
 {
     /**
      * @const STATUS_MISSING_VALUE
@@ -52,15 +52,17 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
 
     /**
      * @param ServerRequestInterface $request
+     * @param RequestHandlerInterface $request
      *
      * @return ResponseInterface
      */
-    public function handle(ServerRequestInterface $request): ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
     {
         $dataArray = Json::decode($request->getBody()->getContents(), Json::TYPE_ARRAY);
         //evtl. überprüfen?
 
-        if (is_null($dataArray) || !is_array($dataArray) || !array_key_exists('data', $dataArray)) {
+        if (is_null($dataArray) || !is_array($dataArray) || !array_key_exists('data', $dataArray)) 
+        {
             return $this->problemDetails->createResponse(
                 $request,
                 400,
@@ -72,7 +74,8 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
 
         $formData = $dataArray['data'];
 
-        if (!array_key_exists('config', $formData)) {
+        if (!array_key_exists('config', $formData)) 
+        {
             return $this->problemDetails->createResponse(
                 $request,
                 500,
@@ -88,7 +91,8 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
         $this->formularObj->setRequestData($formData);
         $this->formularObj->validateRequestData();
 
-        if ($this->formularObj->getErrorStatus()) {
+        if ($this->formularObj->getErrorStatus()) 
+        {
             return $this->problemDetails->createResponse(
                 $request,
                 400,
@@ -98,9 +102,17 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
             );
         }
 
+        if($this->formularObj->getFormConfigAdapter() == null)
+        {
+            //If adapter is set to null, we will pass the form so that the next handler may use it.
+            return $handler->handle($request);
+        }
+
+
         //TODO: Ab hier noch mal drüber nachdenken
         $dataDriver = $this->formularObj->createDriver();
-        if ($dataDriver->getErrorStatus()) {
+        if ($dataDriver->getErrorStatus()) 
+        {
             return $this->problemDetails->createResponse(
                 $request,
                 500,
@@ -127,14 +139,17 @@ class FormularHandlerMiddleware implements RequestHandlerInterface
      */
     private function makeFormConfig($formConfig)
     {
-        if (!isset($formConfig['adapter']) || !is_array($formConfig['adapter'])) {
+        if (!isset($formConfig['adapter']) || !is_array($formConfig['adapter'])) 
+        {
             return $formConfig;
         }
 
         $adapter = $formConfig['adapter'];
-        foreach ($adapter as $key => $value) {
+        foreach ($adapter as $key => $value) 
+        {
             if (is_string($value)) {
-                if (isset($this->formDefinition['adapter']) && array_key_exists($value, $this->formDefinition['adapter'])) {
+                if (isset($this->formDefinition['adapter']) && array_key_exists($value, $this->formDefinition['adapter'])) 
+                {
                     $tempAdapter = $this->formDefinition['adapter'][$value];
                     unset($formConfig['adapter'][$key]);
                     $formConfig['adapter'] = array_merge($formConfig['adapter'], $tempAdapter);

@@ -95,7 +95,8 @@ class Formular
      */
     public function checkFormConfigFields()
     {
-        if (!isset($this->getConfig()['fields']) || is_null($this->getConfig()['fields'] || !is_array($this->getConfig()['fields']))) {
+        if (!isset($this->getConfig()['fields']) || is_null($this->getConfig()['fields'] || !is_array($this->getConfig()['fields']))) 
+        {
             $this->setError('No fields defined in Formular-Config.');
         }
     }
@@ -157,23 +158,29 @@ class Formular
      */
     public function validateRequestData()
     {
-        if (!isset($this->config['fields']) || !is_array($this->config['fields'])) {
+        if (!isset($this->config['fields']) || !is_array($this->config['fields'])) 
+        {
             $this->setError('The Form-Config is missing a definition for fields!');
-        } else {
-            $validFields = null;
-            foreach ($this->config['fields'] as $field => $fieldEntry) {
-                if (isset($fieldEntry['required']) && $fieldEntry['required'] == true) {
-                    if (!isset($this->requestData[$field])) {
-                        $this->setError('The field '.$field.' was not found in the submitted form!');
-                    }
-                }
-
-                if (isset($this->requestData[$field])) {
-                    $validFields[$field] = $this->requestData[$field];
+            return;
+        }
+        $validFields = null;
+        foreach ($this->config['fields'] as $field => $fieldEntry) 
+        {
+            if (isset($fieldEntry['required']) && $fieldEntry['required'] == true) 
+            {
+                if (!isset($this->requestData[$field])) 
+                {
+                    $this->setError('The field '.$field.' was not found in the submitted form!');
+                    return;
                 }
             }
-            $this->validFields = $validFields;
+
+            if (isset($this->requestData[$field])) 
+            {
+                $validFields[$field] = $this->requestData[$field];
+            }
         }
+        $this->validFields = $validFields;
     }
 
     /**
@@ -197,7 +204,8 @@ class Formular
 
         $driver = null;
 
-        switch ($driverName) {
+        switch ($driverName) 
+        {
             case 'smtpmail':
                 $driver = new SmtpMail($this->config, $this->validFields);
                 break;

@@ -23,7 +23,8 @@ class PhpMail extends AbstractAdapter
         $formData = $this->validFields;
         $mailData = $this->config['adapter']['phpmail'];
 
-        try {
+        try 
+        {
             $loader = new Twig\Loader\ArrayLoader([
                 'mailMessage.html' => $mailData['template'],
             ]);
@@ -32,10 +33,12 @@ class PhpMail extends AbstractAdapter
             $mailMessage = $twig->render('mailMessage.html', $formData);
 
             $replyTo = $this->replyTo($mailData);
-            if (!$this->errorStatus) {
+            if (!$this->errorStatus) 
+            {
                 $this->sendMail($mailData, $mailMessage, $replyTo);
             }
-        } catch (Exception $e) {
+        } catch (Exception $e) 
+        {
             parent::setError('Error occourd in: '.$e->getFile().' on line: '.$e->getLine().' with message: '.$e->getMessage());
         }
     }
@@ -59,7 +62,8 @@ class PhpMail extends AbstractAdapter
         $twig = new Twig\Environment($loader);
 
         $replacements = [];
-        foreach ($this->validFields as $key => $value) {
+        foreach ($this->validFields as $key => $value) 
+        {
             $replacements[$key] = $value;
         }
 
@@ -72,7 +76,8 @@ class PhpMail extends AbstractAdapter
             $header['Reply-to'] = $replyTo;
         }
 
-        foreach ($mailData['recipients'] as $recipient) {
+        foreach ($mailData['recipients'] as $recipient) 
+        {
             mail(
                 $recipient,
                 $mailSubject,
