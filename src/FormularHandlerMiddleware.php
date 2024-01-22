@@ -76,8 +76,6 @@ class FormularHandlerMiddleware implements MiddlewareInterface
 
         try 
         {
-            var_dump($request->getBody()->getContents());
-            exit;
             $dataArray = Json::decode($request->getBody()->getContents(), Json::TYPE_ARRAY);
         }
         catch (\Exception $e)
