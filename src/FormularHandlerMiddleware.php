@@ -66,8 +66,30 @@ class FormularHandlerMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
 
-        $dataArray = Json::decode($request->getBody()->getContents(), Json::TYPE_ARRAY);
-        //evtl. überprüfen?
+        if ($request->getHeaderLine('X-Requested-With') !== 'XMLHttpRequest') 
+        {
+            //if the request was not done with AJAX, we won't serve it.
+            return $handler->handle($request);
+        }
+
+        $dataArray = null;
+
+        try 
+        {
+            var_dump($request->getBody()->getContents());
+            exit;
+            $dataArray = Json::decode($request->getBody()->getContents(), Json::TYPE_ARRAY);
+        }
+        catch (\Exception $e)
+        {
+            return $this->problemDetails->createResponse(
+                $request,
+                400,
+                'Request data used a wrong format.',
+                self::STATUS_MISSING_VALUE,
+                'N/A'
+            );
+        }
 
         if (is_null($dataArray) || !is_array($dataArray) || !array_key_exists('data', $dataArray)) 
         {
