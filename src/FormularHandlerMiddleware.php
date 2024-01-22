@@ -58,6 +58,13 @@ class FormularHandlerMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
     {
+
+        if ($request->getMethod() !== 'POST') 
+        {
+            //Since this request is not a POST, we can't extract any information and thus we'll just pass it.
+            return $handler->handle($request);
+        }
+
         $dataArray = Json::decode($request->getBody()->getContents(), Json::TYPE_ARRAY);
         //evtl. überprüfen?
 
