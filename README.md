@@ -10,7 +10,7 @@ check for missing fields and only uses fields that you realy expect to be submit
 Run the following to install this library:
 
 ```bash
-$ composer require depa/middleware-formularhandler
+$ composer require electricbrands/mezzio-middleware-formhandler:dev-master
 ```
 
 ## Info ##
@@ -20,25 +20,74 @@ If your form has fields that are not defined inside the config, the handler will
 
 At the bottom of the Doc, i'll show you a quick example on how the config is build like.
 
--- We will add an HTML example aswell --
 
 ### The Implementation ###
-To Implement the Middleware, just add a Route to your routes files that passes it's request into the middleware:
-   ```php
+To implement the middleware, add a route to your routes file that passes its request into the middleware:
+   ```
     $app->route(
         '/formhandler[/]',
         [
-            depa\FormularHandlerMiddleware\FormularHandlerMiddleware::class,
+            ElectricBrands\FormularHandlerMiddleware\FormularHandlerMiddleware::class,
         ],
         ['POST'],
         'formHandler'
     );
    ```
-after that, be sure to provide a config-file inside your config/autoload folder, that contains anything the Middleware needs to check your forms.
-We recommend you to use our config-file and just adjust it to fit your needs
 
-### The needed Data ###
+Since our FormHandler is now a real middleware, you can even implement it like this:
+   ```php
+    $app->route(
+        '/formhandler[/]',
+        [
+            ElectricBrands\FormularHandlerMiddleware\FormularHandlerMiddleware::class,
+            App\Handler\YourHandler::class
+        ],
+        ['POST'],
+        'formHandler'
+    );
+   ```
+If you define ```'adapter' => null```, our FormHandler will pass the validated form onto the handler, which can then perform its own magic on it.
+
+after that, be sure to provide a config-file inside your config/autoload folder, that contains anything the Middleware needs to check your forms.
+We recommend you to use our config-file ```/config/form-config.local.php``` paste it into your ```/config/autoload/``` folder and adjust it to fit your needs.
+
+### Needed Data ###
 The Formhandler needs JSON-Requests to run properly and also it responds with JSON, describing whats going on.
+- While the current version exclusively supports JSON, we have plans to incorporate auto-detection for other content types in future updates. This means that the FormHandler will be more versatile and adaptable to various request formats.
+
+## Important Notes: ##
+- Included in this Project, there is a basic JavaScript ```/js/FormToJSON.js``` that is important to send data to the FormHandler, without it none of the FormHandlers (Origin or Forked) will work properly as AJAX doesn't send data like default ```$.submit()``` would do.
+You can implement your own logic but you may need it to begin with.
+
+- It is essential to define an ```<input type="hidden" name="data[config]" value="YourFormName">``` field inside your form. This field provides our FormHandler with the necessary information about the form it must validate against.
+
+- Also, each Input must begin with "data", like this: ```<input type="hidden" name="data[config]" value="aValue"/>```. Failure to follow this format will result in the input not being recognized by our FormHandler.
+
+### HTML Example ###
+    ```html
+    <form id="aId" method="post">
+        <input type="hidden" name="data[config]" value="aValue"/>
+        <div class="row mb-1">
+            <div class="col-6">
+                <input id="surname" name="data[nachname]" type="text" class="form-control bg-dark"
+                placeholder="Surname" required/>
+            </div>
+            <div class="col-6">
+                <input id="Name" name="data[name]" type="text" class="form-control bg-dark"
+                placeholder="Name" required/>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="form-group">
+                    <label class="text-muted label-center">Empty Fields will be ignored.</label>
+                    <button id="submit" type="submit" class="btn btn-success w-100">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    ```
+
 
 ### The Adapters ###
 Currently there are 2 working Adapters:
@@ -82,8 +131,14 @@ Currently there are 2 working Adapters:
   ],
     ```
     smtpmail sends the mail via Swift_SmtpTransport.
-    
     you can implement them (as later described) as global or as local ones, global adapters do overwrite the local ones.
+* null
+    <br/>
+    definition looks like this:
+    ```php
+    'adapter' => null,
+    ```
+    When using 'null' as adapter, the FormHandler will validate the Form and then pass it onto the handler/middleware in its Route.
 
 ### The Local-Adapters ###
     
@@ -95,7 +150,7 @@ The Adapter field must be directly inside the form-definition:
               ...
           ],
           'adapter' => [
-              ...
+              ... 
           ],
       ],
   ],
