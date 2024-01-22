@@ -1,7 +1,6 @@
 # Middleware-FormHandler
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![StyleCI](https://styleci.io/repos/201788719/shield?branch=master)](https://github.styleci.io/repos/201788719)
 
 This library allows you to handle your forms, 
 check for missing fields and only uses fields that you realy expect to be submitted.
@@ -20,6 +19,8 @@ If your form has fields that are not defined inside the config, the handler will
 ## Documentation
 
 At the bottom of the Doc, i'll show you a quick example on how the config is build like.
+
+-- We will add an HTML example aswell --
 
 ### The Implementation ###
 To Implement the Middleware, just add a Route to your routes files that passes it's request into the middleware:
@@ -103,7 +104,7 @@ The Adapter field must be directly inside the form-definition:
 ### The Global-Adapters ###
 A Global Adapter is defined in the very top of the config: 
 ```php
-'depaForm' => [
+'ebForm' => [
     'adapter' => [
         'globalTestAdapter-1' => [
             'smtpmail' => [
@@ -193,7 +194,7 @@ If you want to set a field as required add this into the config of the field:
 ### The Example ###
 
 ```php
-'depaForm' => [
+'ebForm' => [
     'adapter' => [
         'globalExampleAdapter-1' => [
             'smtpmail' => [
@@ -289,7 +290,7 @@ If you want to set a field as required add this into the config of the field:
 
 ## Credits
 
-This bundle has been developed by [designpark](https://www.designpark.de) and has been forked by [ElectricBrands](https://www.electricbrands.de)
+This bundle has been developed by [designpark](https://www.designpark.de) and has was forked by [ElectricBrands](https://www.electricbrands.de)
 
 
 ## License

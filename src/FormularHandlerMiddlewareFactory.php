@@ -30,7 +30,7 @@ class FormularHandlerMiddlewareFactory
          *
          * ist alles ok, werden die formdaten je nach adapter "gesendet"
          */
-        $formConfig = $container->get('config')['depaForm'];
+        $formConfig = $container->get('config')['ebForm'];
         $formularObj = $container->get(Formular::class);
         $problemDetails = $container->get(ProblemDetailsResponseFactory::class);
 

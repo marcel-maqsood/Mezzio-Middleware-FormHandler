@@ -2,7 +2,7 @@
 
 return [
 
-    'depaForm' => [
+    'ebForm' => [
         'adapter' => [
             'testAdapter-1' => [
                 'smtpmail' => [
@@ -16,8 +16,8 @@ return [
                             'service'    => 'smtp.googlemail.com',
                             'port'       => '465',
                             'encryption' => 'ssl',
-                            'email'      => 'marcel.dp.designpark@gmail.com',
-                            'password'   => 'marceldesignpark',
+                            'email'      => 'that sends this mail',
+                            'password'   => 'for that mail',
                         ],
                     ],
                 ],
