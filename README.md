@@ -46,7 +46,6 @@ Since our FormHandler is now a real middleware, you can even implement it like t
         'formHandler'
     );
    ```
-If you define ```'adapter' => null```, our FormHandler will pass the validated form onto the handler, which can then perform its own magic on it.
 
 after that, be sure to provide a config-file inside your config/autoload folder, that contains anything the Middleware needs to check your forms.
 We recommend you to use our config-file ```/config/form-config.local.php``` paste it into your ```/config/autoload/``` folder and adjust it to fit your needs.
@@ -90,8 +89,8 @@ You can implement your own logic but you may need it to begin with.
 
 
 ### The Adapters ###
-Currently there are 2 working Adapters:
-* phpmail
+Currently there are 3 working Adapters:
+* **phpmail**
     <br/>
     definition looks like this:
     ```php
@@ -110,7 +109,7 @@ Currently there are 2 working Adapters:
   ],
     ```
     phpmail sends the mail (as you may expect) via the php method: mail().
-* smtpmail
+* **smtpmail**
     <br/>
     definition looks like this:
     ```php
@@ -132,13 +131,13 @@ Currently there are 2 working Adapters:
     ```
     smtpmail sends the mail via Swift_SmtpTransport.
     you can implement them (as later described) as global or as local ones, global adapters do overwrite the local ones.
-* null
+* **null**
     <br/>
     definition looks like this:
     ```php
     'adapter' => null,
     ```
-    When using 'null' as adapter, the FormHandler will validate the Form and then pass it onto the handler/middleware in its Route.
+    If you define ```'adapter' => null```, our FormHandler will pass the validated form onto the next Handler in your route, which can then perform its own magic on it.
 
 ### The Local-Adapters ###
     
