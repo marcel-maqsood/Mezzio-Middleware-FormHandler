@@ -132,7 +132,8 @@ class FormularHandlerMiddleware implements MiddlewareInterface
 
         if($this->formularObj->getFormConfigAdapter() == null)
         {
-            //If adapter is set to null, we will pass the form so that the next handler may use it.
+            //If adapter is set to null, we will pass the form and append the formdata so that the next handler may use it.
+            $request = $request->withAttribute('formData', $formData);
             return $handler->handle($request);
         }
 
