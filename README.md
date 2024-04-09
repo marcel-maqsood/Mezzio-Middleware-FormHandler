@@ -3,14 +3,14 @@
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
 This library allows you to handle your forms, 
-check for missing fields and only uses fields that you realy expect to be submitted.
+check for missing fields and only uses fields that you really expect to be submitted.
 
 ## Installation
 
 Run the following to install this library:
 
 ```bash
-$ composer require electricbrands/mezzio-middleware-formhandler:dev-master
+$ composer require marcel-maqsood/mezzio-middleware-formhandler:dev-master
 ```
 
 ## Info ##
