@@ -1,6 +1,6 @@
 {
     "name": "marcel-maqsood/mezzio-middleware-formhandler",
-    "description": "The middleware formularhandler is a PSR-15 middleware that provides handling from formular data in a Zend Expressive application",
+    "description": "The middleware formularhandler is a PSR-15 middleware that provides handling from formular data in a Laminas/Mezzio application",
     "keywords": [
         "framework",
         "MazeDEV",

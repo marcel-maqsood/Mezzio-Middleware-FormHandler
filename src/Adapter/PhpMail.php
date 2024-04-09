@@ -21,7 +21,7 @@ class PhpMail extends AbstractAdapter
     public function handleData()
     {
         $formData = $this->validFields;
-        $mailData = $this->config['adapter']['phpmail'];
+        $mailData = $this->config['adapters']['phpmail'];
 
         try 
         {
@@ -96,17 +96,17 @@ class PhpMail extends AbstractAdapter
      */
     protected function checkConfig($config)
     {
-        if (!isset($config['adapter']) || is_null($config['adapter']) || !is_array($config['adapter'])) {
+        if (!isset($config['adapters']) || is_null($config['adapters']) || !is_array($config['adapters'])) {
             parent::setError('The adapter was not found in config!');
 
             return;
         }
-        if (!isset($config['adapter']['phpmail']) || is_null($config['adapter']['phpmail']) || !is_array($config['adapter']['phpmail'])) {
+        if (!isset($config['adapters']['phpmail']) || is_null($config['adapters']['phpmail']) || !is_array($config['adapters']['phpmail'])) {
             parent::setError('There is no mail-config inside the adapter!');
 
             return;
         }
-        $mailConfig = $config['adapter']['phpmail'];
+        $mailConfig = $config['adapters']['phpmail'];
 
         if (!isset($mailConfig['recipients']) || is_null($mailConfig['recipients']) || !is_array($mailConfig['recipients'])) {
             //Fehler: ungültige definition von recipients

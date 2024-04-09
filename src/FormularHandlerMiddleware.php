@@ -137,18 +137,25 @@ class FormularHandlerMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
 
-
-        //TODO: Ab hier noch mal drüber nachdenken
-        $dataDriver = $this->formularObj->createDriver();
-        if ($dataDriver->getErrorStatus()) 
+        $dataDrivers = $this->formularObj->createDrivers();
+        foreach($dataDrivers as $driver)
         {
-            return $this->problemDetails->createResponse(
-                $request,
-                500,
-                $dataDriver->getErrorDescription(),
-                self::STATUS_MISSING_VALUE,
-                'N/A'
-            );
+            if($driver == null)
+            {
+                $request = $request->withAttribute('formData', $formData);
+                return $handler->handle($request);
+            }
+
+            if ($driver->getErrorStatus()) 
+            {
+                return $this->problemDetails->createResponse(
+                    $request,
+                    500,
+                    $driver->getErrorDescription(),
+                    self::STATUS_MISSING_VALUE,
+                    'N/A'
+                );
+            }
         }
 
         return new JsonResponse(

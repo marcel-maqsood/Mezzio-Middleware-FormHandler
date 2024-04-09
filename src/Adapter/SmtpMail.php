@@ -27,19 +27,19 @@ class SmtpMail extends AbstractAdapter
      */
     protected function checkConfig($config)
     {
-        if (!isset($config['adapter']) || is_null($config['adapter']) || !is_array($config['adapter'])) 
+        if (!isset($config['adapters']) || is_null($config['adapters']) || !is_array($config['adapters'])) 
         {
             parent::setError('The adapter was not found in config!');
 
             return;
         }
-        if (!isset($config['adapter']['smtpmail']) || is_null($config['adapter']['smtpmail']) || !is_array($config['adapter']['smtpmail'])) 
+        if (!isset($config['adapters']['smtpmail']) || is_null($config['adapters']['smtpmail']) || !is_array($config['adapters']['smtpmail'])) 
         {
             parent::setError('There is no mail-config inside the adapter!');
 
             return;
         }
-        $mailConfig = $config['adapter']['smtpmail'];
+        $mailConfig = $config['adapters']['smtpmail'];
 
         if (!isset($mailConfig['email_transfer']) || is_null($mailConfig['email_transfer']) || !is_array($mailConfig['email_transfer'])) 
         {
@@ -99,7 +99,7 @@ class SmtpMail extends AbstractAdapter
     public function handleData()
     {
         $formData = $this->validFields;
-        $mailData = $this->config['adapter']['smtpmail']; //macht sinn das in abstractadapter auszulagern, und den config eintrag per klassen variable zu setzen (['adapter'][$this->name];)?
+        $mailData = $this->config['adapters']['smtpmail']; //macht sinn das in abstractadapter auszulagern, und den config eintrag per klassen variable zu setzen (['adapter'][$this->name];)?
 
         try 
         {
@@ -173,7 +173,7 @@ class SmtpMail extends AbstractAdapter
      */
     private function createTransporter()
     {
-        $transfer_config = $this->config['adapter']['smtpmail']['email_transfer']['config'];
+        $transfer_config = $this->config['adapters']['smtpmail']['email_transfer']['config'];
 
         if (!isset($transfer_config['service']) || is_null($transfer_config['service'])) 
         {

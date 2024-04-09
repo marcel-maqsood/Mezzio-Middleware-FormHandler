@@ -15,6 +15,9 @@ $ composer require electricbrands/mezzio-middleware-formhandler:dev-master
 
 ## Info ##
 If your form has fields that are not defined inside the config, the handler will not use them due to security reasons.
+```adapter``` is no longer the correct keyword for DataAdapters, the key is now 'adapters' as the Formhandler is now able to use multiple adapters in one go.
+
+##BE AWARE: if ```adapters``` contain an entry 'null', that no other adapter after that entry will be used as null passes the data down the pipe. ##
 
 ## Documentation
 
@@ -94,7 +97,7 @@ Currently there are 3 working Adapters:
     <br/>
     definition looks like this:
     ```php
-  'adapter' => [
+  'adapters' => [
       'phpmail' => [
           'reply-to' => [
               'status' => true,
@@ -113,7 +116,7 @@ Currently there are 3 working Adapters:
     <br/>
     definition looks like this:
     ```php
-  'adapter' => [
+  'adapters' => [
       'smtpmail' => [
           //same as on phpmail but includes:
           'email_transfer' => [
@@ -135,7 +138,7 @@ Currently there are 3 working Adapters:
     <br/>
     definition looks like this:
     ```php
-    'adapter' => null,
+    'adapters' => null,
     ```
     If you define ```'adapter' => null```, our FormHandler will pass the validated form onto the next Handler in your route, which can then perform its own magic on it.
 
@@ -143,23 +146,23 @@ Currently there are 3 working Adapters:
     
 The Adapter field must be directly inside the form-definition:
 ```php
-  'forms' => [
+    'forms' => [
       'contact' => [
-          'fields' => [
-              ...
-          ],
-          'adapter' => [
-              ... 
-          ],
-      ],
-  ],
+            'fields' => [
+                ...
+            ],
+            'adapters' => [
+                null
+            ],
+        ],
+    ],
 ```
     
 ### The Global-Adapters ###
 A Global Adapter is defined in the very top of the config: 
 ```php
 'mazeform' => [
-    'adapter' => [
+    'adapters' => [
         'globalTestAdapter-1' => [
             'smtpmail' => [
                 'recipients'     => ['example@example.com'],
@@ -192,7 +195,9 @@ inside of the adapter-field of your form-config:
             ...
         ],
         'adapter' => [
-            'globalTestAdapter-1' //or any other name you have used for an adapter.
+            'globalTestAdapter-1',
+            'secondAdapter',
+            null
         ],
     ],
 ],
@@ -249,7 +254,7 @@ If you want to set a field as required add this into the config of the field:
 
 ```php
 'mazeform' => [
-    'adapter' => [
+    'adapters' => [
         'globalExampleAdapter-1' => [
             'smtpmail' => [
                 'recipients'     => ['recipient@example.com'],
@@ -295,8 +300,9 @@ If you want to set a field as required add this into the config of the field:
                     'required' => true,
                 ],
             ],
-            'adapter' => [
-                'globalExampleAdapter-1'
+            'adapters' => [
+                'globalExampleAdapter-1',
+                null
             ],
         ],
         'otherForm' => [
@@ -324,7 +330,7 @@ If you want to set a field as required add this into the config of the field:
                     'required' => true,
                 ],
             ],
-            'adapter' => [
+            'adapters' => [
                 'phpmail' => [
                     'reply-to' => [
                         'status' => true,
@@ -335,6 +341,22 @@ If you want to set a field as required add this into the config of the field:
                     'sender'     => 'sender@example.com',
                     'senderName' => 'Form',
                     'template'       => 'Test {{message}} {{mail}}',
+                ],
+                'smtpmail' => [
+                    'recipients'     => ['recipient@example.com'],
+                    'subject'        => 'base subject all forms that uses this specific adaper has',
+                    'sender'         => 'example@example.com',
+                    'senderName'     => 'Kontaktformular',
+                    'template'       => 'nothing',
+                    'email_transfer' => [
+                        'config' => [
+                            'service'    => 'smtp.example.com',
+                            'port'       => '465',
+                            'encryption' => 'ssl',
+                            'email'      => 'example@example.com',
+                            'password'   => 'yourPassword',
+                        ],
+                    ],
                 ],
             ],
         ],

@@ -149,7 +149,7 @@ class Formular
      */
     public function getFormConfigAdapter()
     {
-        return $this->getConfig()['adapter'];
+        return $this->getConfig()['adapters'];
     }
 
     /**
@@ -196,30 +196,48 @@ class Formular
     /**
      * Erstellt einen Treiber, auf welcher Basis die Daten des Formulars abgespeichert/versendet werden.
      *
-     * @return SmtpMail|PdoDatabase|Wufoo|null
+     * @return array|null
      */
-    public function createDriver()
+    public function createDrivers()
     {
         $driverName = strtolower(key($this->getFormConfigAdapter()));
 
-        $driver = null;
+        $drivers = [];
 
-        switch ($driverName) 
+        if($this->getFormConfigAdapter() == null)
         {
-            case 'smtpmail':
-                $driver = new SmtpMail($this->config, $this->validFields);
-                break;
-            case 'phpmail':
-                $driver = new PhpMail($this->config, $this->validFields);
-                break;
-            case 'pdo':
-                $driver = new PdoDatabase($this->config, $this->validFields);
-                break;
-            case 'wufoo':
-                $driver = new Wufoo($this->config, $this->validFields);
-                break;
+            return [null];
         }
 
-        return $driver;
+        foreach($this->getFormConfigAdapter() as $key => $value)
+        {
+            switch ($key) 
+            {
+                case 'smtpmail':
+                    $drivers[] = new SmtpMail($this->config, $this->validFields);
+                    break;
+                case 'phpmail':
+                    $drivers[] = new PhpMail($this->config, $this->validFields);
+                    break;
+                case 'pdo':
+                    $drivers[] = new PdoDatabase($this->config, $this->validFields);
+                    break;
+                case 'wufoo':
+                    $drivers[] = new Wufoo($this->config, $this->validFields);
+                    break;
+            }
+
+            if($value == null)
+            {
+                $drivers[] = null;
+            }
+        }
+
+        if(count($drivers) == 0)
+        {
+            $drivers[] = null;
+        }
+
+        return $drivers;
     }
 }
