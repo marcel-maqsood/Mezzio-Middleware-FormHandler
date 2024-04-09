@@ -1,6 +1,6 @@
 <?php
 
-namespace ElectricBrands\FormularHandlerMiddleware;
+namespace MazeDEV\FormularHandlerMiddleware;
 
 /**
  * Class AbstractAdapter.

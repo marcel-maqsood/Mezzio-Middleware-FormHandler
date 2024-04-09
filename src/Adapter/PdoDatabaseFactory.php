@@ -1,6 +1,6 @@
 <?php
 
-namespace ElectricBrands\FormularHandlerMiddleware\Adapter;
+namespace MazeDEV\FormularHandlerMiddleware\Adapter;
 
 use PDO;
 use Psr\Container\ContainerInterface;

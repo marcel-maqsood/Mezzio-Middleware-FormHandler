@@ -1,11 +1,11 @@
 <?php
 
-namespace ElectricBrands\FormularHandlerMiddleware;
+namespace MazeDEV\FormularHandlerMiddleware;
 
-use depa\FormularHandlerMiddleware\Adapter\PdoDatabase;
-use depa\FormularHandlerMiddleware\Adapter\PhpMail;
-use depa\FormularHandlerMiddleware\Adapter\SmtpMail;
-use depa\FormularHandlerMiddleware\Adapter\Wufoo;
+use MazeDEV\FormularHandlerMiddleware\Adapter\PdoDatabase;
+use MazeDEV\FormularHandlerMiddleware\Adapter\PhpMail;
+use MazeDEV\FormularHandlerMiddleware\Adapter\SmtpMail;
+use MazeDEV\FormularHandlerMiddleware\Adapter\Wufoo;
 
 /**
  * Class Formular.

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ElectricBrands\FormularHandlerMiddleware;
+namespace MazeDEV\FormularHandlerMiddleware;
 
 use Psr\Container\ContainerInterface;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
@@ -30,7 +30,7 @@ class FormularHandlerMiddlewareFactory
          *
          * ist alles ok, werden die formdaten je nach adapter "gesendet"
          */
-        $formConfig = $container->get('config')['ebForm'];
+        $formConfig = $container->get('config')['mazeform'];
         $formularObj = $container->get(Formular::class);
         $problemDetails = $container->get(ProblemDetailsResponseFactory::class);
 

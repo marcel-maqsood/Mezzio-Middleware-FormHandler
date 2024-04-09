@@ -2,7 +2,7 @@
 
 return [
 
-    'ebForm' => [
+    'mazeform' => [
         'adapter' => [
             'testAdapter-1' => [
                 'smtpmail' => [

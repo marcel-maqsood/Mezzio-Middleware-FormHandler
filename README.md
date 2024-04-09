@@ -27,7 +27,7 @@ To implement the middleware, add a route to your routes file that passes its req
     $app->route(
         '/formhandler[/]',
         [
-            ElectricBrands\FormularHandlerMiddleware\FormularHandlerMiddleware::class,
+            MazeDEV\FormularHandlerMiddleware\FormularHandlerMiddleware::class,
         ],
         ['POST'],
         'formHandler'
@@ -39,7 +39,7 @@ Since our FormHandler is now a real middleware, you can even implement it like t
     $app->route(
         '/formhandler[/]',
         [
-            ElectricBrands\FormularHandlerMiddleware\FormularHandlerMiddleware::class,
+            MazeDEV\FormularHandlerMiddleware\FormularHandlerMiddleware::class,
             App\Handler\YourHandler::class
         ],
         ['POST'],
@@ -158,7 +158,7 @@ The Adapter field must be directly inside the form-definition:
 ### The Global-Adapters ###
 A Global Adapter is defined in the very top of the config: 
 ```php
-'ebForm' => [
+'mazeform' => [
     'adapter' => [
         'globalTestAdapter-1' => [
             'smtpmail' => [
@@ -248,7 +248,7 @@ If you want to set a field as required add this into the config of the field:
 ### The Example ###
 
 ```php
-'ebForm' => [
+'mazeform' => [
     'adapter' => [
         'globalExampleAdapter-1' => [
             'smtpmail' => [
@@ -344,7 +344,8 @@ If you want to set a field as required add this into the config of the field:
 
 ## Credits
 
-This bundle has been developed by [designpark](https://www.designpark.de) and has was forked by [ElectricBrands](https://www.electricbrands.de)
+This bundle has been developed by [designpark](https://www.designpark.de) and was forked by [ElectricBrands](https://www.electricbrands.de).
+To maintain this project without further mess, it is now forked onto my own github. (It was mainly me who developed it anyways).
 
 
 ## License

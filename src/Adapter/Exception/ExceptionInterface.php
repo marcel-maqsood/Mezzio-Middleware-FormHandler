@@ -1,6 +1,6 @@
 <?php
 
-namespace ElectricBrands\FormularHandlerMiddleware\Adapter\Exception;
+namespace MazeDEV\FormularHandlerMiddleware\Adapter\Exception;
 
 /**
  * @author fenrich

@@ -1,14 +1,14 @@
 {
-    "name": "electricbrands/mezzio-middleware-formhandler",
+    "name": "marcel-maqsood/mezzio-middleware-formhandler",
     "description": "The middleware formularhandler is a PSR-15 middleware that provides handling from formular data in a Zend Expressive application",
     "keywords": [
         "framework",
-        "electricbrands",
+        "MazeDEV",
         "formular",
         "middleware"
     ],
     "license": "MIT",
-    "homepage": "https://github.com/Electricbrands-AG/Mezzio-Middleware-FormHandler",
+    "homepage": "https://github.com/marcel-maqsood/Mezzio-Middleware-FormHandler",
     "config": {
         "platform": {
             "php": "8"
@@ -32,8 +32,8 @@
     },
     "authors": [
         {
-            "name": "ElectricBrands",
-            "homepage": "https://electricbrands.de"
+            "name": "Technikhafen",
+            "homepage": "https://technikhafen.de"
         },
         {
             "name": "Marcel Maqsood"
@@ -41,13 +41,13 @@
     ],
     "autoload": {
         "psr-4": {
-            "ElectricBrands\\FormularHandlerMiddleware\\": "src/"
+            "MazeDEV\\FormularHandlerMiddleware\\": "src/"
         }
     },
     "extra": {
         "laminas": {
-            "component": "ElectricBrands\\FormularHandlerMiddleware",
-            "config-provider": "ElectricBrands\\FormularHandlerMiddleware\\ConfigProvider"
+            "component": "MazeDEV\\FormularHandlerMiddleware",
+            "config-provider": "MazeDEV\\FormularHandlerMiddleware\\ConfigProvider"
         }
     },
     "minimum-stability": "dev",

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ElectricBrands\FormularHandlerMiddleware;
+namespace MazeDEV\FormularHandlerMiddleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

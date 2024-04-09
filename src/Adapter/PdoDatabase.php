@@ -1,8 +1,8 @@
 <?php
 
-namespace ElectricBrands\FormularHandlerMiddleware\Adapter;
+namespace MazeDEV\FormularHandlerMiddleware\Adapter;
 
-use ElectricBrands\FormularHandlerMiddleware\AbstractAdapter;
+use MazeDEV\FormularHandlerMiddleware\AbstractAdapter;
 
 /**
  * Die Klasse speichert die Formulardaten in einer Datenbank.
