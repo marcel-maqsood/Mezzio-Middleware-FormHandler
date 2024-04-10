@@ -120,7 +120,7 @@ Currently there are 3 working Adapters:
       'smtpmail' => [
           //same as on phpmail but includes:
           'email_transfer' => [
-              'method' => 'smtp',
+              'method' => 'smtpmail',
               'config' => [
                   'service'    => 'smtp.googlemail.com',
                   'port'       => '465',
@@ -164,7 +164,8 @@ A Global Adapter is defined in the very top of the config:
 'mazeform' => [
     'adapters' => [
         'globalTestAdapter-1' => [
-            'smtpmail' => [
+            [   
+                'method'         => 'smtpmail',
                 'recipients'     => ['example@example.com'],
                 'subject'        => 'base subject all forms that uses this specific adaper has',
                 'sender'         => 'example@example.com',
@@ -203,6 +204,8 @@ inside of the adapter-field of your form-config:
 ],
 ```
 
+## Recipients ##
+As your forms should be able to send automated responses, you can define any number of recipients within ```php 'recipients'``` and also use '%submit%' so that the handler will map this variable to the first "email" field submitted within your form, eg: max.mustermann@mustermail.de so that max knows that your system took notice.
 
 ### The EMail-Template ###
 The Template, you specified in the Config can be dynamic through twig:
@@ -297,7 +300,8 @@ If you want to set a field as required add this into the config of the field:
 'mazeform' => [
     'adapters' => [
         'globalExampleAdapter-1' => [
-            'smtpmail' => [
+            [
+                'method'         => 'smtpmail',
                 'recipients'     => ['recipient@example.com'],
                 'subject'        => 'base subject all forms that uses this specific adaper has',
                 'sender'         => 'example@example.com',
@@ -372,7 +376,8 @@ If you want to set a field as required add this into the config of the field:
                 ],
             ],
             'adapters' => [
-                'phpmail' => [
+                [
+                    'method'         => 'phpmail',
                     'reply-to' => [
                         'status' => true,
                         'field'  => 'mail'
@@ -383,7 +388,8 @@ If you want to set a field as required add this into the config of the field:
                     'senderName' => 'Form',
                     'template'       => 'Test {{message}} {{mail}}',
                 ],
-                'smtpmail' => [
+                [
+                    'method'         => 'smtpmail',
                     'recipients'     => ['recipient@example.com'],
                     'subject'        => 'base subject all forms that uses this specific adaper has',
                     'sender'         => 'example@example.com',
