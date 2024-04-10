@@ -2,7 +2,7 @@
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
-This library allows you to handle your forms, 
+This library allows you to handle your forms,
 check for missing fields and only uses fields that you really expect to be submitted.
 
 ## Installation
@@ -15,9 +15,9 @@ $ composer require marcel-maqsood/mezzio-middleware-formhandler:dev-master
 
 ## Info ##
 If your form has fields that are not defined inside the config, the handler will not use them due to security reasons.
-```adapter``` is no longer the correct keyword for DataAdapters, the key is now 'adapters' as the Formhandler is now able to use multiple adapters in one go.
+```adapter``` is no longer the correct keyword for DataAdapters, the key is now ```adapters``` as the Formhandler is now able to use multiple adapters in one go.
 
-##BE AWARE: if ```adapters``` contain an entry 'null', that no other adapter after that entry will be used as null passes the data down the pipe. ##
+### BE AWARE: if ```adapters``` contain an entry 'null', that no other adapter after that entry will be used as null passes the data down the pipe. ###
 
 ## Documentation
 
@@ -140,7 +140,7 @@ Currently there are 3 working Adapters:
     ```php
     'adapters' => null,
     ```
-    If you define ```'adapter' => null```, our FormHandler will pass the validated form onto the next Handler in your route, which can then perform its own magic on it.
+    If you define ```'adapters' => null```, our FormHandler will pass the validated form onto the next Handler in your route, which can then perform its own magic on it.
 
 ### The Local-Adapters ###
     
@@ -194,7 +194,7 @@ inside of the adapter-field of your form-config:
         'fields' => [
             ...
         ],
-        'adapter' => [
+        'adapters' => [
             'globalTestAdapter-1',
             'secondAdapter',
             null
@@ -215,7 +215,7 @@ the variables you use must be valid fields of your form and also defined in your
 Like the EMail-Template, also the EMail-Subject do support the twig-renderer.
 
 ### The Reply-To Header ###
-The E-Mail Adapter's can handle with the "Reply-To" email-header
+The E-Mail Adapters can handle with the "Reply-To" email-header
 you can define it inside the Adapter config like this:
 ```php
 'reply-to' => [
@@ -235,11 +235,52 @@ reply-to only works if:
                 'type' => 'email',
             ],
         ],
-        'adapter' => [
+        'adapters' => [
             ...
         ],
     ],
 ],
+```
+
+### Multi-Layer Submit Arrays ###
+As your application might send and receive nested arrays, eg. on contact-forms, our handler is able to retrieve an email field from within a nested arrays:
+You only need to define a field as ```php 'type' => 'array'``` if you want to use this behaviour.
+
+```php
+'contactForm' => [
+    'fields' => [
+        'contact' => [
+            'type' => 'array',
+            'childs' => [
+                'salutation' => [
+                    'required' => true,
+                    'type' => 'text'
+                ],
+                'name' => [
+                    'required' => true,
+                    'type' => 'text'
+                ],
+                'surname' => [
+                    'required' => true,
+                    'type' => 'text'
+                ],
+                'email' => [
+                    'required' => true,
+                    'type' => 'email'
+                ],
+                'tel' => [
+                    'required' => true,
+                    'type' => 'int'
+                ],
+            ]
+            //in this case, there is no
+        ],
+    ],
+    'adapters' => [
+            ...
+    ],
+],
+
 ```
 
 ### The Required-Attribute ###

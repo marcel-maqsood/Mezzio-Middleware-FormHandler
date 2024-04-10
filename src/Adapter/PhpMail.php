@@ -21,21 +21,20 @@ class PhpMail extends AbstractAdapter
     public function handleData()
     {
         $formData = $this->validFields;
-        $mailData = $this->config['adapters']['phpmail'];
 
         try 
         {
             $loader = new Twig\Loader\ArrayLoader([
-                'mailMessage.html' => $mailData['template'],
+                'mailMessage.html' => $this->adapter['template'],
             ]);
             $twig = new Twig\Environment($loader);
 
             $mailMessage = $twig->render('mailMessage.html', $formData);
 
-            $replyTo = $this->replyTo($mailData);
+            $replyTo = $this->replyTo($this->adapter);
             if (!$this->errorStatus) 
             {
-                $this->sendMail($mailData, $mailMessage, $replyTo);
+                $this->sendMail($this->adapter, $mailMessage, $replyTo);
             }
         } catch (Exception $e) 
         {
@@ -96,40 +95,32 @@ class PhpMail extends AbstractAdapter
      */
     protected function checkConfig($config)
     {
-        if (!isset($config['adapters']) || is_null($config['adapters']) || !is_array($config['adapters'])) {
-            parent::setError('The adapter was not found in config!');
-
-            return;
-        }
-        if (!isset($config['adapters']['phpmail']) || is_null($config['adapters']['phpmail']) || !is_array($config['adapters']['phpmail'])) {
-            parent::setError('There is no mail-config inside the adapter!');
-
-            return;
-        }
-        $mailConfig = $config['adapters']['phpmail'];
-
-        if (!isset($mailConfig['recipients']) || is_null($mailConfig['recipients']) || !is_array($mailConfig['recipients'])) {
+        if (!isset($config['recipients']) || is_null($config['recipients']) || !is_array($config['recipients'])) 
+        {
             //Fehler: ungültige definition von recipients
             parent::setError('recipients-arraay is not properly defined in adapter!');
 
             return;
         }
 
-        if (!isset($mailConfig['subject']) || is_null($mailConfig['subject']) || !is_string($mailConfig['subject'])) {
+        if (!isset($config['subject']) || is_null($config['subject']) || !is_string($config['subject'])) 
+        {
             //Fehler: ungültige definition von Subject
             parent::setError('There is no subject defined inside the adapter!');
 
             return;
         }
 
-        if (!isset($mailConfig['sender']) || is_null($mailConfig['sender']) || !is_string($mailConfig['sender'])) {
+        if (!isset($config['sender']) || is_null($config['sender']) || !is_string($config['sender'])) 
+        {
             //Fehler: ungültige definition von Subject
             parent::setError('There is no sender defined inside the adapter!');
 
             return;
         }
 
-        if (!isset($mailConfig['senderName']) || is_null($mailConfig['senderName']) || !is_string($mailConfig['senderName'])) {
+        if (!isset($config['senderName']) || is_null($config['senderName']) || !is_string($config['senderName'])) 
+        {
             //Fehler: ungültige definition von Subject
             parent::setError('There is no senderName defined inside the adapter!');
 

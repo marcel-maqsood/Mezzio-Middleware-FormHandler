@@ -38,19 +38,6 @@ class Formular
     private $validFields;
 
     /**
-     * Formular constructor.
-     *
-     * @param array $config
-     * @param array $requestData
-     */
-    public function __construct(array $config = [], array $requestData = [])
-    {
-        $this->config = $config;
-        // Aufteilen der Config in Berech mit Formularfaledern und bereich mit  adaptern
-        $this->requestData = $requestData;
-    }
-
-    /**
      * Gibt die im Formular-Objekt gespeicherten Fomular-Daten zurück.
      *
      * @return array
@@ -147,7 +134,7 @@ class Formular
      *
      * @return mixed
      */
-    public function getFormConfigAdapter()
+    public function getFormConfigAdapters()
     {
         return $this->getConfig()['adapters'];
     }
@@ -163,24 +150,38 @@ class Formular
             $this->setError('The Form-Config is missing a definition for fields!');
             return;
         }
+
+        $this->validFields = $this->getValidatedFields($this->requestData, $this->config['fields']);
+    }
+
+    private function getValidatedFields($data, $fields) 
+    {
         $validFields = null;
-        foreach ($this->config['fields'] as $field => $fieldEntry) 
+    
+        foreach ($fields as $fieldName => $fieldEntry) 
         {
-            if (isset($fieldEntry['required']) && $fieldEntry['required'] == true) 
+            if (!isset($data[$fieldName])) 
             {
-                if (!isset($this->requestData[$field])) 
+                if (!isset($fieldEntry['required']) || $fieldEntry['required'] == false) 
                 {
-                    $this->setError('The field '.$field.' was not found in the submitted form!');
-                    return;
+                    continue;
+                }
+                return "Das Feld '{$fieldName}' wurde im übergebenen Array nicht gefunden!";
+            }
+    
+            if ($fieldEntry['type'] === 'array' && isset($fieldEntry['childs'])) 
+            {
+                $childValidation = $this->getValidatedFields($data[$fieldName], $fieldEntry['childs']);
+                if ($childValidation !== null) 
+                {
+                    $validFields[$fieldName] = $childValidation;
+                    continue;
                 }
             }
-
-            if (isset($this->requestData[$field])) 
-            {
-                $validFields[$field] = $this->requestData[$field];
-            }
+            $validFields[$fieldName] = $data[$fieldName];
         }
-        $this->validFields = $validFields;
+    
+        return $validFields;
     }
 
     /**
@@ -200,36 +201,37 @@ class Formular
      */
     public function createDrivers()
     {
-        $driverName = strtolower(key($this->getFormConfigAdapter()));
-
         $drivers = [];
 
-        if($this->getFormConfigAdapter() == null)
+        $configAdapters = $this->getFormConfigAdapters();
+
+        if($configAdapters == null)
         {
             return [null];
         }
 
-        foreach($this->getFormConfigAdapter() as $key => $value)
+        foreach($configAdapters as $adapter)
         {
-            switch ($key) 
-            {
-                case 'smtpmail':
-                    $drivers[] = new SmtpMail($this->config, $this->validFields);
-                    break;
-                case 'phpmail':
-                    $drivers[] = new PhpMail($this->config, $this->validFields);
-                    break;
-                case 'pdo':
-                    $drivers[] = new PdoDatabase($this->config, $this->validFields);
-                    break;
-                case 'wufoo':
-                    $drivers[] = new Wufoo($this->config, $this->validFields);
-                    break;
-            }
-
-            if($value == null)
+            if($adapter == null)
             {
                 $drivers[] = null;
+                continue;
+            }
+
+            switch ($adapter['method']) 
+            {
+                case 'smtpmail':
+                    $drivers[] = new SmtpMail($this->config, $adapter, $this->validFields);
+                    break;
+                case 'phpmail':
+                    $drivers[] = new PhpMail($this->config, $adapter, $this->validFields);
+                    break;
+                case 'pdo':
+                    $drivers[] = new PdoDatabase($this->config, $adapter, $this->validFields);
+                    break;
+                case 'wufoo':
+                    $drivers[] = new Wufoo($this->config, $adapter, $this->validFields);
+                    break;
             }
         }
 

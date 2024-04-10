@@ -43,14 +43,7 @@ trait ReplyToTrait
 
         if (!isset($mailData['reply-to']['field'])) 
         {
-            foreach ($this->config['fields'] as $key => $field) 
-            {
-                if (isset($field['type']) && $field['type'] == 'email') 
-                {
-                    $replyTo = $this->validFields[$key];
-                    break;
-                }
-            }
+            $replyTo = $this->submitEmail;
         } 
         else 
         {
@@ -71,4 +64,6 @@ trait ReplyToTrait
 
         return $replyTo;
     }
+
+    
 }

@@ -114,8 +114,15 @@ class FormularHandlerMiddleware implements MiddlewareInterface
         }
 
         $formConfig = $this->formDefinition['forms'][$formData['config']];
-
         $this->formularObj->setConfig($this->makeFormConfig($formConfig));
+
+        if($this->formularObj->getFormConfigAdapters() == null)
+        {
+            //If adapter is set to null, we will pass the form and append the formdata so that the next handler may use it.
+            $request = $request->withAttribute('formData', $formData);
+            return $handler->handle($request);
+        }
+
         $this->formularObj->setRequestData($formData);
         $this->formularObj->validateRequestData();
 
@@ -128,13 +135,6 @@ class FormularHandlerMiddleware implements MiddlewareInterface
                 self::STATUS_MISSING_VALUE,
                 'N/A'
             );
-        }
-
-        if($this->formularObj->getFormConfigAdapter() == null)
-        {
-            //If adapter is set to null, we will pass the form and append the formdata so that the next handler may use it.
-            $request = $request->withAttribute('formData', $formData);
-            return $handler->handle($request);
         }
 
         $dataDrivers = $this->formularObj->createDrivers();
@@ -175,20 +175,21 @@ class FormularHandlerMiddleware implements MiddlewareInterface
      */
     private function makeFormConfig($formConfig)
     {
-        if (!isset($formConfig['adapter']) || !is_array($formConfig['adapter'])) 
+        if (!isset($formConfig['adapters']) || !is_array($formConfig['adapters'])) 
         {
             return $formConfig;
         }
 
-        $adapter = $formConfig['adapter'];
-        foreach ($adapter as $key => $value) 
+        $adapters = $formConfig['adapters'];
+        foreach ($adapters as $key => $value) 
         {
-            if (is_string($value)) {
-                if (isset($this->formDefinition['adapter']) && array_key_exists($value, $this->formDefinition['adapter'])) 
+            if (is_string($value)) 
+            {
+                if (isset($this->formDefinition['adapters']) && array_key_exists($value, $this->formDefinition['adapters'])) 
                 {
-                    $tempAdapter = $this->formDefinition['adapter'][$value];
-                    unset($formConfig['adapter'][$key]);
-                    $formConfig['adapter'] = array_merge($formConfig['adapter'], $tempAdapter);
+                    $tempAdapter = $this->formDefinition['adapters'][$value];
+                    unset($formConfig['adapters'][$key]);
+                    $formConfig['adapters'][] = array_merge($formConfig['adapters'], $tempAdapter);
                 }
             }
         }

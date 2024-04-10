@@ -5,7 +5,8 @@ return [
     'mazeform' => [
         'adapter' => [
             'testAdapter-1' => [
-                'smtpmail' => [
+                [
+                    'method'         => 'smtpmail',
                     'recipients'     => ['marcel.dp.designpark@gmail.com'],
                     'subject'        => 'base subject all forms that uses this specific adaper has',
                     'sender'         => 'example@example.com',
@@ -97,8 +98,9 @@ return [
                     ],
                 ],
                 'adapter' => [
-                    'phpmail' => [
-                        'reply-to' => [
+                    [
+                        'method'     => 'phpmail' ,
+                        'reply-to'   => [
                             'status' => true, // true/false
                             'field'  => 'mail', // Das Feld im post, welches die Email Adresse der Person benhaltet
                         ],

@@ -27,21 +27,25 @@ abstract class AbstractAdapter implements AdapterInterface
      */
     protected $validFields;
 
+    protected $submitEmail;
+
+    protected $adapter;
+
     /**
      * AbstractAdapter constructor.
      *
      * @param array $config
      * @param array $validFields
      */
-    public function __construct(array $config = [], array $validFields = [])
+    public function __construct(array $config, array $adapter,  array $validFields = [])
     {
-        //es gibt in der config 2 bereiche. bereich a definiert die formularelemente, bereich b definiert den/die adapter
         $this->config = $config;
+        $this->adapter = $adapter;
         $this->validFields = $validFields;
-        //Subject ist ein extra Feld im Formular, das nicht zwingend sein muss, falls es aber definiert wurde,
-        //kann der Inhalt in der Betreffzeile der Form-Config abgerufen werden.
 
-        $this->checkConfig($this->config);
+        $this->submitEmail = $this->recursiveFindEmailField($config['fields'], $validFields);
+
+        $this->checkConfig($adapter);
         if (!$this->errorStatus) 
         {
             $this->handleData();
@@ -92,4 +96,25 @@ abstract class AbstractAdapter implements AdapterInterface
      * Verarbeitet die Daten des Adapters.
      */
     abstract public function handleData();
+
+    protected function recursiveFindEmailField($fields, $validFields) : string | null
+    {
+        foreach ($fields as $key => $field) 
+        {
+            if($field['type'] == 'array')
+            {
+                $email = $this->recursiveFindEmailField($field['childs'], $validFields[$key]);
+                if($email != null)
+                {
+                    return $email;
+                }
+            }
+            
+            if (isset($field['type']) && $field['type'] == 'email') 
+            {
+                return $validFields[$key];
+            }
+        }
+        return null;
+    }
 }

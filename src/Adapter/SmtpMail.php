@@ -25,30 +25,16 @@ class SmtpMail extends AbstractAdapter
      *
      * @return array |null
      */
-    protected function checkConfig($config)
+    protected function checkConfig($adapter)
     {
-        if (!isset($config['adapters']) || is_null($config['adapters']) || !is_array($config['adapters'])) 
-        {
-            parent::setError('The adapter was not found in config!');
-
-            return;
-        }
-        if (!isset($config['adapters']['smtpmail']) || is_null($config['adapters']['smtpmail']) || !is_array($config['adapters']['smtpmail'])) 
-        {
-            parent::setError('There is no mail-config inside the adapter!');
-
-            return;
-        }
-        $mailConfig = $config['adapters']['smtpmail'];
-
-        if (!isset($mailConfig['email_transfer']) || is_null($mailConfig['email_transfer']) || !is_array($mailConfig['email_transfer'])) 
+        if (!isset($adapter['email_transfer']) || is_null($adapter['email_transfer']) || !is_array($adapter['email_transfer'])) 
         {
             //Fehler: keine gültige config für das versenden von mails
             parent::setError('There is no email_transfer defined inside the mail-adapter config!');
 
             return;
         }
-        $mailTransfer = $mailConfig['email_transfer'];
+        $mailTransfer = $adapter['email_transfer'];
 
         if (!isset($mailTransfer['config']) || is_null($mailTransfer['config']) || !is_array($mailTransfer['config'])) 
         {
@@ -58,7 +44,7 @@ class SmtpMail extends AbstractAdapter
             return;
         }
 
-        if (!isset($mailConfig['recipients']) || is_null($mailConfig['recipients']) || !is_array($mailConfig['recipients'])) 
+        if (!isset($adapter['recipients']) || is_null($adapter['recipients']) || !is_array($adapter['recipients'])) 
         {
             //Fehler: ungültige definition von recipients
             parent::setError('recipients-arraay is not properly defined in adapter!');
@@ -66,7 +52,7 @@ class SmtpMail extends AbstractAdapter
             return;
         }
 
-        if (!isset($mailConfig['subject']) || is_null($mailConfig['subject']) || !is_string($mailConfig['subject'])) 
+        if (!isset($adapter['subject']) || is_null($adapter['subject']) || !is_string($adapter['subject'])) 
         {
             //Fehler: ungültige definition von Subject
             parent::setError('There is no subject defined inside the adapter!');
@@ -74,7 +60,7 @@ class SmtpMail extends AbstractAdapter
             return;
         }
 
-        if (!isset($mailConfig['sender']) || is_null($mailConfig['sender']) || !is_string($mailConfig['sender'])) 
+        if (!isset($adapter['sender']) || is_null($adapter['sender']) || !is_string($adapter['sender'])) 
         {
             //Fehler: ungültige definition von Subject
             parent::setError('There is no sender defined inside the adapter!');
@@ -82,7 +68,7 @@ class SmtpMail extends AbstractAdapter
             return;
         }
 
-        if (!isset($mailConfig['senderName']) || is_null($mailConfig['senderName']) || !is_string($mailConfig['senderName'])) 
+        if (!isset($adapter['senderName']) || is_null($adapter['senderName']) || !is_string($adapter['senderName'])) 
         {
             //Fehler: ungültige definition von Subject
             parent::setError('There is no senderName defined inside the adapter!');
@@ -90,7 +76,7 @@ class SmtpMail extends AbstractAdapter
             return;
         }
 
-        return $config;
+        return $adapter;
     }
 
     /**
@@ -98,22 +84,19 @@ class SmtpMail extends AbstractAdapter
      */
     public function handleData()
     {
-        $formData = $this->validFields;
-        $mailData = $this->config['adapters']['smtpmail']; //macht sinn das in abstractadapter auszulagern, und den config eintrag per klassen variable zu setzen (['adapter'][$this->name];)?
-
         try 
         {
             $loader = new Twig\Loader\ArrayLoader([
-                'mailMessage.html' => $mailData['template'],
+                'mailMessage.html' => $this->adapter['template'],
             ]);
             $twig = new Twig\Environment($loader);
 
-            $mailMessage = $twig->render('mailMessage.html', $formData);
+            $mailMessage = $twig->render('mailMessage.html', $this->validFields);
 
-            $replyTo = $this->replyTo($mailData);
+            $replyTo = $this->replyTo($this->adapter);
             if (!$this->errorStatus) 
             {
-                $this->sendMail($mailData, $mailMessage, $replyTo);
+                $this->sendMail($this->adapter, $mailMessage, $replyTo);
             }
         } 
         catch (Exception $e) 
@@ -153,6 +136,19 @@ class SmtpMail extends AbstractAdapter
 
         foreach ($mailData['recipients'] as $recipient) 
         {
+            //if we encounter a recipient that does not contain an '@', we handle it like a variable and replace it if possible; otherwise it will be discarded.
+            if(!strpos($recipient, "@"))
+            {
+                if($recipient == '%submit%')
+                {
+                    $recipient = $this->submitEmail;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+
             $message = (new Swift_Message())
                 ->setSubject($mailSubject)
                 ->setFrom([$mailData['sender'] => $mailData['senderName']])
@@ -173,7 +169,7 @@ class SmtpMail extends AbstractAdapter
      */
     private function createTransporter()
     {
-        $transfer_config = $this->config['adapters']['smtpmail']['email_transfer']['config'];
+        $transfer_config = $this->adapter['email_transfer']['config'];
 
         if (!isset($transfer_config['service']) || is_null($transfer_config['service'])) 
         {
