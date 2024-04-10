@@ -139,14 +139,20 @@ class SmtpMail extends AbstractAdapter
             //if we encounter a recipient that does not contain an '@', we handle it like a variable and replace it if possible; otherwise it will be discarded.
             if(!strpos($recipient, "@"))
             {
-                if($recipient == '%submit%')
+                if($recipient != '%submit%')
                 {
-                    $recipient = $this->submitEmail;
-                }
-                else
-                {
+                    //We could add more error handling; 
+                    //but for now we just ignore the recipient if he doesnt have a valid email and is not %submit%.
                     continue;
                 }
+ 
+                if($this->submitEmail == null)
+                {
+                    //if the recipient is %submit% and we dont have a submitEmail (maybe casue the form didn't had one set)
+                    //then the handler cant map it so we ignore it.
+                    continue;
+                }
+                $recipient = $this->submitEmail;
             }
 
             $message = (new Swift_Message())
