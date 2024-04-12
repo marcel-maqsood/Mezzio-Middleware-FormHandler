@@ -66,13 +66,15 @@ class FormularHandlerMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
 
-        if ($request->getHeaderLine('X-Requested-With') !== 'XMLHttpRequest') 
+        /*if ($request->getHeaderLine('X-Requested-With') !== 'XMLHttpRequest') 
         {
             //if the request was not done with AJAX, we won't serve it.
             return $handler->handle($request);
-        }
+        }*/
 
         $dataArray = null;
+        $asJson = true;
+        $asArray = true;
 
         try 
         {
@@ -80,10 +82,29 @@ class FormularHandlerMiddleware implements MiddlewareInterface
         }
         catch (\Exception $e)
         {
+            $asJson = false;
+        }
+
+        if(!$asJson)
+        {
+            try 
+            {
+                parse_str($request->getBody()->getContents(), $dataArray);
+            } 
+            catch(\Exception $e) 
+            {
+                $asArray = false;
+            }
+
+        }
+
+        
+        if(!$asArray && !$asJson)
+        {
             return $this->problemDetails->createResponse(
                 $request,
                 400,
-                'Request data used a wrong format.',
+                'Data was missing in submitted form.',
                 self::STATUS_MISSING_VALUE,
                 'N/A'
             );
