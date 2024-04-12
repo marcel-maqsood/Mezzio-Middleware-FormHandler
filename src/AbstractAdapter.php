@@ -101,6 +101,11 @@ abstract class AbstractAdapter implements AdapterInterface
     {
         foreach ($fields as $key => $field) 
         {
+            if(!isset($validFields[$key]))
+            {
+                continue;
+            }
+            
             if($field['type'] == 'array')
             {
                 $email = $this->recursiveFindEmailField($field['childs'], $validFields[$key]);
