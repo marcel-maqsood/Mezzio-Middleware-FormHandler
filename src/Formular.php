@@ -37,6 +37,8 @@ class Formular
      */
     private $validFields;
 
+    public $csrf;
+
     /**
      * Gibt die im Formular-Objekt gespeicherten Fomular-Daten zurück.
      *
@@ -156,7 +158,7 @@ class Formular
 
     private function getValidatedFields($data, $fields) 
     {
-        $validFields = null;
+        $validFields = [];
     
         foreach ($fields as $fieldName => $fieldEntry) 
         {
@@ -166,7 +168,8 @@ class Formular
                 {
                     continue;
                 }
-                return "Das Feld '{$fieldName}' wurde im übergebenen Array nicht gefunden!";
+                $this->setError("Das Feld '{$fieldName}' wurde im übergebenen Array nicht gefunden!");
+                break;
             }
     
             if ($fieldEntry['type'] === 'array' && isset($fieldEntry['childs'])) 
@@ -178,6 +181,12 @@ class Formular
                     continue;
                 }
             }
+
+            if($fieldEntry['type'] === 'csrf')
+            {
+                $this->csrf = $data[$fieldName];
+            }
+
             $validFields[$fieldName] = $data[$fieldName];
         }
     

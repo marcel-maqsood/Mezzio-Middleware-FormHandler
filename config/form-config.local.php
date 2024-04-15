@@ -96,6 +96,10 @@ return [
                         /*Wie stellt man sowas dar? type war eigentlich nur amf HTML-Attribute bezogen.*/
                         'type' => 'textarea',
                     ],
+                    'message' => [
+                        'required' => true,
+                        'type' => 'csrf',
+                    ],
                 ],
                 'adapter' => [
                     [

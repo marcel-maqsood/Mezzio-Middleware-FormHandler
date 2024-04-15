@@ -11,6 +11,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Json\Json;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
+use Mezzio\Csrf\CsrfMiddleware;
 
 /**
  * Class FormularHandlerMiddleware.
@@ -36,6 +37,8 @@ class FormularHandlerMiddleware implements MiddlewareInterface
      * @var Formular
      */
     private $formularObj;
+
+    private $guard;
 
     /**
      * FormularHandlerMiddleware constructor.
@@ -65,6 +68,8 @@ class FormularHandlerMiddleware implements MiddlewareInterface
             //Since this request is not a POST, we can't extract any information and thus we'll just pass it.
             return $handler->handle($request);
         }
+
+        $this->guard = $request->getAttribute(CsrfMiddleware::GUARD_ATTRIBUTE);
 
         /*if ($request->getHeaderLine('X-Requested-With') !== 'XMLHttpRequest') 
         {
@@ -146,6 +151,19 @@ class FormularHandlerMiddleware implements MiddlewareInterface
 
         $this->formularObj->setRequestData($formData);
         $this->formularObj->validateRequestData();
+
+        if($this->formularObj->csrf != '')
+        {
+            if($this->guard != null)
+            {
+                if (!$this->guard->validateToken($this->formularObj->csrf)) 
+                {
+                    $request = $request->withAttribute('formData', $formData);
+                    $request = $request->withAttribute('csrfError', '...');
+                    return $handler->handle($request);
+                }
+            }
+        }
 
         if ($this->formularObj->getErrorStatus()) 
         {

@@ -245,9 +245,37 @@ reply-to only works if:
 ],
 ```
 
+### CSRF Protection ###
+As your Forms will at some point either be stored within a database or send via email, our Formhandler can check for CSRF Tokens to protect your application from getting bloated.
+
+To use CSRF Protection, you have to install [Mezzio-CSRF](https://github.com/mezzio/mezzio-csrf) and configure it correctly.
+
+After that, be sure to define one of your fields as ``` 'type' => 'csrf' ```:
+You can either define it as required true or false but we suggest to use ``` 'required' => 'true' ``` as only then your request are guranteed to be CSRF protected.
+
+```php
+'contactForm' => [
+    'fields' => [
+        'somename' => [
+            'required' => true
+            'type' => 'csrf',
+        ],
+    ]
+]
+```
+
+If the eequest was submitted with an invalid CSRF-token, our FormHandler won't process the request further and instead passes the request down the pipe with the additional attribute ``` 'csrfError' ``` which you can use within your code:
+
+```php
+if($request->getAttribute('csrfError') != null)
+{
+    //your error handling goes here...
+}
+```            
+
 ### Multi-Layer Submit Arrays ###
 As your application might send and receive nested arrays, eg. on contact-forms, our handler is able to retrieve an email field from within a nested arrays:
-You only need to define a field as ```php 'type' => 'array'``` if you want to use this behaviour.
+You only need to define a field as ``` 'type' => 'array'``` if you want to use this behaviour.
 
 ```php
 'contactForm' => [
@@ -344,6 +372,10 @@ If you want to set a field as required add this into the config of the field:
                 'message' => [
                     'required' => true,
                 ],
+                'somefield' => [
+                    'required' => true,
+                    'type' => 'csrf'
+                ]
             ],
             'adapters' => [
                 'globalExampleAdapter-1',
@@ -374,6 +406,10 @@ If you want to set a field as required add this into the config of the field:
                 'message' => [
                     'required' => true,
                 ],
+                'somefield' => [
+                    'required' => true,
+                    'type' => 'csrf'
+                ]
             ],
             'adapters' => [
                 [
