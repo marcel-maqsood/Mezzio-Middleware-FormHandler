@@ -246,12 +246,13 @@ reply-to only works if:
 ```
 
 ### CSRF Protection ###
-As your Forms will at some point either be stored within a database or send via email, our Formhandler can check for CSRF Tokens to protect your application from getting bloated.
+As your Forms will at some point either be stored within a database or send via email, our FormHandler can check for CSRF-Tokens to protect your application from getting bloated.
 
 To use CSRF Protection, you have to install [Mezzio-CSRF](https://github.com/mezzio/mezzio-csrf) and configure it correctly.
+You dont have to define it as required, but we suggest to use ``` 'required' => 'true' ``` as only then your request are guranteed to be CSRF protected.
 
 After that, be sure to define one of your fields as ``` 'type' => 'csrf' ```:
-You can either define it as required true or false but we suggest to use ``` 'required' => 'true' ``` as only then your request are guranteed to be CSRF protected.
+
 
 ```php
 'contactForm' => [
@@ -264,7 +265,7 @@ You can either define it as required true or false but we suggest to use ``` 're
 ]
 ```
 
-If the eequest was submitted with an invalid CSRF-token, our FormHandler won't process the request further and instead passes the request down the pipe with the additional attribute ``` 'csrfError' ``` which you can use within your code:
+If the request was submitted with an invalid CSRF-Token, our FormHandler won't process the request further and instead passes the request down the pipe with the additional attribute ``` 'csrfError' ``` which you can use within your code:
 
 ```php
 if($request->getAttribute('csrfError') != null)
