@@ -249,7 +249,7 @@ reply-to only works if:
 As your Forms will at some point either be stored within a database or send via email, our FormHandler can check for CSRF-Tokens to protect your application from getting bloated.
 
 To use CSRF Protection, you have to install [Mezzio-CSRF](https://github.com/mezzio/mezzio-csrf) and configure it correctly.
-You dont have to define it as required, but we suggest to use ``` 'required' => 'true' ``` as only then your request are guranteed to be CSRF protected.
+You dont have to define a field as required, but we suggest to use ``` 'required' => 'true' ``` as only then your request are guranteed to be CSRF protected.
 
 After that, be sure to define one of your fields as ``` 'type' => 'csrf' ```:
 
