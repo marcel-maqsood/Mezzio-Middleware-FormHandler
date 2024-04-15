@@ -159,7 +159,7 @@ class SmtpMail extends AbstractAdapter
                 ->setSubject($mailSubject)
                 ->setFrom([$mailData['sender'] => $mailData['senderName']])
                 ->setTo([$recipient])
-                ->setBody($mailMessage);
+                ->setBody($mailMessage, 'text/html');
             if (!is_null($replyTo)) 
             {
                 $message = $message->setReplyTo($replyTo);
