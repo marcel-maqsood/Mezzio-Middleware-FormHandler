@@ -107,7 +107,7 @@ Currently there are 3 working Adapters:
               'subject'    => 'subject',
               'sender'     => 'sender@example.com',
               'senderName' => 'Form', 
-              'template'   => 'Test {{message}} {{mail}}',
+              'template'   => 'app::test',
       ],
   ],
     ```
@@ -170,7 +170,7 @@ A Global Adapter is defined in the very top of the config:
                 'subject'        => 'base subject all forms that uses this specific adaper has',
                 'sender'         => 'example@example.com',
                 'senderName'     => 'form',
-                'template'       => 'nothing',
+                'template'       => 'app::test',
                 'email_transfer' => [
                     'config' => [
                          'service'    => 'smtp.googlemail.com',
@@ -208,14 +208,15 @@ inside of the adapter-field of your form-config:
 As your forms should be able to send automated responses, you can define any number of recipients within ```php 'recipients'``` and also use '%submit%' so that the handler will map this variable to the first "email" field submitted within your form, eg: max.mustermann@mustermail.de so that max knows that your system took notice.
 
 ### The EMail-Template ###
-The Template, you specified in the Config can be dynamic through twig:
-```php
-'template' => 'my Name is {{name}}'
+The Template, you specified in the Config can be dynamic through twig, however since v1.0.23, the template field must contain a valid template's name:
+```
+'template' => 'app::test'
 ```
 the variables you use must be valid fields of your form and also defined in your config.
 
 ### The EMail-Subject ###
-Like the EMail-Template, also the EMail-Subject do support the twig-renderer.
+Like the EMail-Template, also the EMail-Subject do support the twig-renderer, however the Subject does not support template-names, its a plain string:
+``` 'subject'        => 'base subject all forms that uses this specific adaper has {{ some_twig_variable }}'```
 
 ### The Reply-To Header ###
 The E-Mail Adapters can handle with the "Reply-To" email-header
@@ -335,7 +336,7 @@ If you want to set a field as required add this into the config of the field:
                 'subject'        => 'base subject all forms that uses this specific adaper has',
                 'sender'         => 'example@example.com',
                 'senderName'     => 'Kontaktformular',
-                'template'       => 'nothing',
+                'template'       => 'app::test',
                 'email_transfer' => [
                     'config' => [
                         'service'    => 'smtp.example.com',
@@ -423,7 +424,7 @@ If you want to set a field as required add this into the config of the field:
                     'subject'    => 'example subject',
                     'sender'     => 'sender@example.com',
                     'senderName' => 'Form',
-                    'template'       => 'Test {{message}} {{mail}}',
+                    'template'       => 'app::test',
                 ],
                 [
                     'method'         => 'smtpmail',
@@ -431,7 +432,7 @@ If you want to set a field as required add this into the config of the field:
                     'subject'        => 'base subject all forms that uses this specific adaper has',
                     'sender'         => 'example@example.com',
                     'senderName'     => 'Kontaktformular',
-                    'template'       => 'nothing',
+                    'template'       => 'app::test',
                     'email_transfer' => [
                         'config' => [
                             'service'    => 'smtp.example.com',
