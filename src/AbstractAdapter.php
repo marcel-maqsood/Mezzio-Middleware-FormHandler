@@ -2,6 +2,8 @@
 
 namespace MazeDEV\FormularHandlerMiddleware;
 
+
+use Mezzio\Template\TemplateRendererInterface;
 /**
  * Class AbstractAdapter.
  */
@@ -31,17 +33,20 @@ abstract class AbstractAdapter implements AdapterInterface
 
     protected $adapter;
 
+    protected $renderer;
+
     /**
      * AbstractAdapter constructor.
      *
      * @param array $config
      * @param array $validFields
      */
-    public function __construct(array $config, array $adapter,  array $validFields = [])
+    public function __construct(array $config, array $adapter,  array $validFields = [], TemplateRendererInterface $renderer = null)
     {
         $this->config = $config;
         $this->adapter = $adapter;
         $this->validFields = $validFields;
+        $this->renderer = $renderer;
 
         $this->submitEmail = $this->recursiveFindEmailField($config['fields'], $validFields);
 

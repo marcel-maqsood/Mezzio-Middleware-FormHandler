@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MazeDEV\FormularHandlerMiddleware;
 
+use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -18,6 +19,11 @@ class FormularFactory
      */
     public function __invoke(ContainerInterface $container) : Formular
     {
-        return new Formular();
+        $renderer = $container->has(TemplateRendererInterface::class)
+            ? $container->get(TemplateRendererInterface::class)
+            : null;
+
+
+        return new Formular($renderer);
     }
 }

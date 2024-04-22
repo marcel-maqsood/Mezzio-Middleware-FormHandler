@@ -6,6 +6,7 @@ use MazeDEV\FormularHandlerMiddleware\Adapter\PdoDatabase;
 use MazeDEV\FormularHandlerMiddleware\Adapter\PhpMail;
 use MazeDEV\FormularHandlerMiddleware\Adapter\SmtpMail;
 use MazeDEV\FormularHandlerMiddleware\Adapter\Wufoo;
+use Mezzio\Template\TemplateRendererInterface;
 
 /**
  * Class Formular.
@@ -38,6 +39,13 @@ class Formular
     private $validFields;
 
     public $csrf;
+
+    private $renderer;
+
+    public function __construct(TemplateRendererInterface $renderer)
+    {
+        $this->renderer = $renderer;
+    }
 
     /**
      * Gibt die im Formular-Objekt gespeicherten Fomular-Daten zurück.
@@ -230,10 +238,10 @@ class Formular
             switch ($adapter['method']) 
             {
                 case 'smtpmail':
-                    $drivers[] = new SmtpMail($this->config, $adapter, $this->validFields);
+                    $drivers[] = new SmtpMail($this->config, $adapter, $this->validFields, $this->renderer);
                     break;
                 case 'phpmail':
-                    $drivers[] = new PhpMail($this->config, $adapter, $this->validFields);
+                    $drivers[] = new PhpMail($this->config, $adapter, $this->validFields, $this->renderer);
                     break;
                 case 'pdo':
                     $drivers[] = new PdoDatabase($this->config, $adapter, $this->validFields);

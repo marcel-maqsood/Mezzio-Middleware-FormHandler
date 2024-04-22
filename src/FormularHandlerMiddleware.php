@@ -117,6 +117,8 @@ class FormularHandlerMiddleware implements MiddlewareInterface
 
         if (is_null($dataArray) || !is_array($dataArray) || !array_key_exists('data', $dataArray)) 
         {
+            var_dump($dataArray);
+            exit;
             return $this->problemDetails->createResponse(
                 $request,
                 400,

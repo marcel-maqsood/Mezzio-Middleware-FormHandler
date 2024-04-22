@@ -86,12 +86,8 @@ class SmtpMail extends AbstractAdapter
     {
         try 
         {
-            $loader = new Twig\Loader\ArrayLoader([
-                'mailMessage.html' => $this->adapter['template'],
-            ]);
-            $twig = new Twig\Environment($loader);
 
-            $mailMessage = $twig->render('mailMessage.html', $this->validFields);
+            $mailMessage = $this->renderer->render($this->adapter['template'], $this->validFields);
 
             $replyTo = $this->replyTo($this->adapter);
             if (!$this->errorStatus) 

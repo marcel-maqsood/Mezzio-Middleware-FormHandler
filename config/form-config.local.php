@@ -112,8 +112,7 @@ return [
                         'subject'    => 'subject',
                         'sender'     => 'sender@example.com',
                         'senderName' => 'Form',
-                        //Template bleibt in dieser Form nicht bestehen.
-                        'template'       => 'Test {{message}} {{mail}}',
+                        'template'       => 'app::test',
                     ],
                 ],
             ],
