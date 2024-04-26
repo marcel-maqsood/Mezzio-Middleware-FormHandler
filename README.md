@@ -54,11 +54,11 @@ after that, be sure to provide a config-file inside your config/autoload folder,
 We recommend you to use our config-file ```/config/form-config.local.php``` paste it into your ```/config/autoload/``` folder and adjust it to fit your needs.
 
 ### Needed Data ###
-The Formhandler needs JSON-Requests to run properly and also it responds with JSON, describing whats going on.
-- While the current version exclusively supports JSON, we have plans to incorporate auto-detection for other content types in future updates. This means that the FormHandler will be more versatile and adaptable to various request formats.
+The Formhandler needs either JSON-, Multidata- or plain POST Requests to run properly and it responds with JSON, describing whats going on.
+- You can either adress the FormHandler by submitting your form the regualr way (button type="submit" form method="post") or via AJAX. if you go through AJAX, you can use our base JavaScript to prepare the form in accordance to the Handlers needs.
 
 ## Important Notes: ##
-- Included in this Project, there is a basic JavaScript ```/js/FormToJSON.js``` that is important to send data to the FormHandler, without it none of the FormHandlers (Origin or Forked) will work properly as AJAX doesn't send data like default ```$.submit()``` would do.
+- Included in this Project, there is a basic JavaScript ```/js/FormToJSON.js``` that is important to send data to the FormHandler when using AJAX Requests.
 You can implement your own logic but you may need it to begin with.
 
 - It is essential to define an ```<input type="hidden" name="data[config]" value="YourFormName">``` field inside your form. This field provides our FormHandler with the necessary information about the form it must validate against.
