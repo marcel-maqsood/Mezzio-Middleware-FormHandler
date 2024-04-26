@@ -94,15 +94,20 @@ class FormularHandlerMiddleware implements MiddlewareInterface
         {
             try 
             {
-                parse_str($request->getBody()->getContents(), $dataArray);
+                if(empty($request->getParsedBody()))
+                {
+                    parse_str($request->getBody()->getContents(), $dataArray);
+                }
+                else
+                {
+                    $dataArray = $request->getParsedBody();
+                }
             } 
             catch(\Exception $e) 
             {
                 $asArray = false;
             }
-
         }
-
         
         if(!$asArray && !$asJson)
         {
