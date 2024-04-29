@@ -142,7 +142,7 @@ class SmtpMail extends AbstractAdapter
                     continue;
                 }
  
-                if($this->submitEmail == null)
+                if($this->submitEmail == null || $this->submitEmail == "")
                 {
                     //if the recipient is %submit% and we dont have a submitEmail (maybe casue the form didn't had one set)
                     //then the handler cant map it so we ignore it.
