@@ -10,9 +10,6 @@
     "license": "MIT",
     "homepage": "https://github.com/marcel-maqsood/Mezzio-Middleware-FormHandler",
     "config": {
-        "platform": {
-            "php": "8"
-        }
     },
     "require": {
         "php": "~8.0.0 || ~8.1.0 || ~8.2.0",
