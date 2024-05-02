@@ -12,9 +12,6 @@
     "config": {
         "platform": {
             "php": "8"
-        },
-        "allow-plugins": {
-            "laminas/laminas-dependency-plugin": true
         }
     },
     "require": {
@@ -27,8 +24,7 @@
         "mezzio/mezzio-problem-details": "^1.0",
         "laminas/laminas-json": "^3.1",
         "laminas/laminas-diactoros": "^2.1",
-        "twig/twig": "^2.11",
-        "laminas/laminas-dependency-plugin": "^2.1"
+        "twig/twig": "^2.11"
     },
     "authors": [
         {
