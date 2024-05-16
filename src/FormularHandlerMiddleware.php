@@ -69,13 +69,11 @@ class FormularHandlerMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
 
-        $this->guard = $request->getAttribute(CsrfMiddleware::GUARD_ATTRIBUTE);
 
-        /*if ($request->getHeaderLine('X-Requested-With') !== 'XMLHttpRequest') 
-        {
-            //if the request was not done with AJAX, we won't serve it.
-            return $handler->handle($request);
-        }*/
+		if (class_exists('Mezzio\Csrf\CsrfMiddleware'))
+		{
+			$this->guard = $request->getAttribute(CsrfMiddleware::GUARD_ATTRIBUTE);
+		}
 
         $dataArray = null;
         $asJson = true;
