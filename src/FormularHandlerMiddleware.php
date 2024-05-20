@@ -146,6 +146,9 @@ class FormularHandlerMiddleware implements MiddlewareInterface
 
         $formConfig = $this->formDefinition['forms'][$formData['config']];
         $this->formularObj->setConfig($this->makeFormConfig($formConfig));
+        
+        $this->formularObj->setRequestData($formData);
+        $this->formularObj->validateRequestData();
 
         if($this->formularObj->getFormConfigAdapters() == null)
         {
@@ -153,9 +156,6 @@ class FormularHandlerMiddleware implements MiddlewareInterface
             $request = $request->withAttribute('formData', $formData);
             return $handler->handle($request);
         }
-
-        $this->formularObj->setRequestData($formData);
-        $this->formularObj->validateRequestData();
 
         if($this->formularObj->csrf != '')
         {
