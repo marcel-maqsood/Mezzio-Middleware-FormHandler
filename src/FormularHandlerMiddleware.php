@@ -156,12 +156,6 @@ class FormularHandlerMiddleware implements MiddlewareInterface
         $this->formularObj->setRequestData($formData);
         $this->formularObj->validateRequestData();
 
-        if($this->formularObj->getFormConfigAdapters() == null)
-        {
-            //If adapter is set to null, we will pass the form and append the formdata so that the next handler may use it.
-            $request = $request->withAttribute('formData', $formData);
-            return $handler->handle($request);
-        }
 
         if($this->formularObj->csrf != '')
         {
@@ -175,6 +169,15 @@ class FormularHandlerMiddleware implements MiddlewareInterface
                 }
             }
         }
+
+
+        if($this->formularObj->getFormConfigAdapters() == null)
+        {
+            //If adapter is set to null, we will pass the form and append the formdata so that the next handler may use it.
+            $request = $request->withAttribute('formData', $formData);
+            return $handler->handle($request);
+        }
+
 
         if ($this->formularObj->getErrorStatus()) 
         {
