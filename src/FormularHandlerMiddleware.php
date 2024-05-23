@@ -131,7 +131,13 @@ class FormularHandlerMiddleware implements MiddlewareInterface
             );
         }
 
-        $formData = $dataArray['data'];
+        $formData = $dataArray['data'] ?? null;
+
+        if($formData == null)
+        {
+            //if there is no data attribute in that request, we pass it down the pipe as it is not meant for our handler.
+            return $handler->handle($request);
+        }
 
         if (!array_key_exists('config', $formData)) 
         {
